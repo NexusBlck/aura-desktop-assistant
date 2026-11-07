@@ -1,0 +1,90 @@
+/* SWISS - International Typographic Style: heavy grotesk, strict left alignment, thick black rules, flat colour
+   fields, big numbers, nothing decorative. For corporate, product and design teams. Themes: signal · klein · noir. */
+:root[data-skin="swiss"] {
+  --bg: #ffffff; --bg2: #ffffff; --panel: #ffffff; --panel-solid: #ffffff; --surface2: #ffffff;
+  --line: #d6d6d6; --line-strong: #111111; --rule: #111111;
+  --cyan: #e30613; --cyan-bright: #b8000c; --cyan-dim: #f2a0a5; --cyan-faint: rgba(227, 6, 19, .07); --on-accent: #fff;
+  --amber: #e08a00; --red: #e30613; --green: #00875a; --violet: #4b3fa6;
+  --text: #111111; --text-dim: #555555; --text-faint: #8a8a8a;
+  --f-head: 'Archivo', 'Helvetica Neue', Arial, sans-serif; --f-ui: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --f-mono: 'Roboto Mono', Consolas, monospace; --radius: 0px; color-scheme: light;
+}
+:root[data-skin="swiss"][data-skin-theme="klein"] {
+  --bg: #f6f6f3; --bg2: #f6f6f3; --panel: #f6f6f3; --panel-solid: #ffffff; --surface2: #f6f6f3;
+  --cyan: #002fa7; --cyan-bright: #00217a; --cyan-dim: #93a7dc; --cyan-faint: rgba(0, 47, 167, .07);
+}
+:root[data-skin="swiss"][data-skin-theme="noir"] {
+  --bg: #0d0d0d; --bg2: #0d0d0d; --panel: #0d0d0d; --panel-solid: #161616; --surface2: #0d0d0d;
+  --line: #2e2e2e; --line-strong: #f2f2f2; --rule: #f2f2f2;
+  --cyan: #ff3b30; --cyan-bright: #ff6a61; --cyan-dim: #7a1d18; --cyan-faint: rgba(255, 59, 48, .1); --on-accent: #fff;
+  --text: #f2f2f2; --text-dim: #a6a6a6; --text-faint: #6b6b6b; color-scheme: dark;
+}
+
+:root[data-skin="swiss"] body { font-weight: 450; }
+:root[data-skin="swiss"] .brand svg { display: none; }
+:root[data-skin="swiss"] .brand .name { font-weight: 900; font-size: 1.5rem; letter-spacing: -.03em; text-transform: lowercase; }
+:root[data-skin="swiss"] .brand .name::after { content: '.'; color: var(--cyan); }
+:root[data-skin="swiss"] .pill { font-family: var(--f-ui); font-weight: 700; font-size: .7rem; letter-spacing: 0; text-transform: uppercase; border: 0; padding: 0; }
+:root[data-skin="swiss"] .topbar, :root[data-skin="swiss"] .page-head { border-bottom: 3px solid var(--rule); }
+
+/* headings: heavy, tight, left */
+:root[data-skin="swiss"] .ph .title, :root[data-skin="swiss"] .section-label, :root[data-skin="swiss"] .page-head h1, :root[data-skin="swiss"] .sheet h2,
+:root[data-skin="swiss"] .toast .tt, :root[data-skin="swiss"] .field label {
+  font-family: var(--f-head); font-weight: 800; letter-spacing: -.01em; text-transform: none; color: var(--text); }
+:root[data-skin="swiss"] .ph .title { font-size: 1.15rem; }
+:root[data-skin="swiss"] .ph .title::before { display: none; }
+:root[data-skin="swiss"] .ph .code { font-family: var(--f-ui); font-weight: 700; font-size: .7rem; color: var(--text-faint); letter-spacing: 0; }
+:root[data-skin="swiss"] .page-head h1 { font-size: 1.35rem; letter-spacing: -.02em; }
+:root[data-skin="swiss"] .section-label { font-size: 1.6rem; letter-spacing: -.03em; margin: 28px 0 10px; }
+
+/* panels: a 3px rule on top, no box */
+:root[data-skin="swiss"] .panel { background: transparent; border: 0; border-top: 3px solid var(--rule); padding: 10px 0 16px; margin-bottom: 18px; }
+
+/* buttons: solid black blocks; accent for the primary */
+:root[data-skin="swiss"] .btn, :root[data-skin="swiss"] .tab, :root[data-skin="swiss"] .seg button, :root[data-skin="swiss"] .tool, :root[data-skin="swiss"] .mini,
+:root[data-skin="swiss"] .chip, :root[data-skin="swiss"] .banner button {
+  font-family: var(--f-ui); font-weight: 700; letter-spacing: 0; text-transform: none; }
+:root[data-skin="swiss"] .btn { background: var(--text); color: var(--bg); border: 0; font-size: .95rem; }
+:root[data-skin="swiss"] .btn:active { background: var(--text-dim); }
+:root[data-skin="swiss"] .btn.solid { background: var(--cyan); color: var(--on-accent); }
+:root[data-skin="swiss"] .btn.danger { background: transparent; border: 2px solid var(--red); }
+:root[data-skin="swiss"] .chip { border: 2px solid var(--text); font-size: .9rem; }
+:root[data-skin="swiss"] .input, :root[data-skin="swiss"] .textarea { border: 2px solid var(--text); font-family: var(--f-ui); }
+:root[data-skin="swiss"] .seg button { border: 2px solid var(--text); margin-left: -2px; font-size: .85rem; }
+:root[data-skin="swiss"] .seg button.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+/* tab bar: a flat strip; active is a full colour field */
+:root[data-skin="swiss"] .tabbar { border-top: 3px solid var(--rule); }
+:root[data-skin="swiss"] .tab { color: var(--text); font-size: .74rem; }
+:root[data-skin="swiss"] .tab.active { background: var(--cyan); color: var(--on-accent); }
+:root[data-skin="swiss"] .tab.active::after { display: none; }
+
+/* status: one huge word */
+:root[data-skin="swiss"] .reactor { min-height: 0; max-width: none; }
+:root[data-skin="swiss"] .core-text { align-items: flex-start; text-align: left; min-height: 0; padding: 4px 0 18px; }
+:root[data-skin="swiss"] .core-text .l1 { font-family: var(--f-ui); font-weight: 700; font-size: .78rem; letter-spacing: 0; color: var(--cyan); text-transform: uppercase; }
+:root[data-skin="swiss"] .core-text .l2 { font-family: var(--f-head); font-weight: 900; font-size: clamp(3rem, 16vw, 5.4rem); letter-spacing: -.05em; line-height: .9; text-transform: lowercase; margin: 6px 0; }
+:root[data-skin="swiss"] .core-text .l3 { font-family: var(--f-ui); font-weight: 600; font-size: .9rem; letter-spacing: 0; text-transform: none; }
+:root[data-skin="swiss"] .callout { background: transparent; border: 0; border-top: 3px solid var(--rule); padding: 6px 0; font-family: var(--f-ui); font-weight: 700; font-size: .7rem; letter-spacing: 0; text-transform: uppercase; }
+:root[data-skin="swiss"] .callout b, :root[data-skin="swiss"] .stat b, :root[data-skin="swiss"] .focus .ftime, :root[data-skin="swiss"] .gauge .val {
+  font-family: var(--f-head); font-weight: 900; font-size: 2.2rem; letter-spacing: -.04em; line-height: 1; }
+:root[data-skin="swiss"] .stat { font-family: var(--f-ui); font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
+:root[data-skin="swiss"] .bar { height: 10px; }
+
+/* conversation: big readable text, accent rule for AURA */
+:root[data-skin="swiss"] .t-line { font-size: 1.08rem; }
+:root[data-skin="swiss"] .t-line .tag { font-family: var(--f-ui); font-weight: 800; letter-spacing: 0; font-size: .74rem; text-transform: uppercase; }
+:root[data-skin="swiss"] .t-aura { border-left: 6px solid var(--cyan); padding-left: 12px; }
+:root[data-skin="swiss"] .t-you { font-weight: 700; }
+:root[data-skin="swiss"] .cmd-box { border: 3px solid var(--text); }
+:root[data-skin="swiss"] .cmd-box .prompt { display: none; }
+:root[data-skin="swiss"] .cmd-box textarea { font-family: var(--f-ui); font-weight: 600; }
+:root[data-skin="swiss"] .tool { background: transparent; border: 0; border-top: 3px solid var(--rule); align-items: flex-start; text-align: left; font-size: .9rem; }
+:root[data-skin="swiss"] .tool svg { color: var(--cyan); }
+:root[data-skin="swiss"] .nx-card, :root[data-skin="swiss"] .nx-panel { background: transparent; border: 0; border-top: 3px solid var(--rule); }
+:root[data-skin="swiss"] .toast { border: 3px solid var(--text); }
+:root[data-skin="swiss"] .toast.reminder, :root[data-skin="swiss"] .toast.error { border-color: var(--cyan); }
+@media (min-width: 768px) {
+  :root[data-skin="swiss"] #app > .tabbar { border-top: 0; border-right: 3px solid var(--rule); }
+  :root[data-skin="swiss"] .core-text .l2 { font-size: 6.5rem; }
+}

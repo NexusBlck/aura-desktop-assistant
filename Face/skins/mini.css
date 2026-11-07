@@ -1,0 +1,53 @@
+/* Mini AURA under an alternative UI skin (generated - edit gen_mini_css.py / the palette there). Colours and type only. */
+:root[data-skin="ledger"][data-skin-theme="paper"] { --panel: #fbf8f1; --text: #211d18; --dim: #6b6358; --cyan: #8a2e1d; --cyan-bright: #8a2e1d; --line: rgba(33,29,24,.16); --mini-on: #fbf8f1; --mini-soft: rgba(138,46,29,.07); }
+:root[data-skin="ledger"][data-skin-theme="linen"] { --panel: #ffffff; --text: #141c26; --dim: #5a6472; --cyan: #1d3a5f; --cyan-bright: #1d3a5f; --line: rgba(20,30,45,.15); --mini-on: #ffffff; --mini-soft: rgba(29,58,95,.07); }
+:root[data-skin="ledger"][data-skin-theme="night"] { --panel: #22211d; --text: #ece6d8; --dim: #a59d8e; --cyan: #c9a35b; --cyan-bright: #c9a35b; --line: rgba(236,230,216,.14); --mini-on: #1a1916; --mini-soft: rgba(201,163,91,.1); }
+:root[data-skin="hmi"][data-skin-theme="daylight"] { --panel: #e4e5e1; --text: #151617; --dim: #45484b; --cyan: #275c9b; --cyan-bright: #275c9b; --line: #9fa29c; --mini-on: #ffffff; --mini-soft: rgba(39,92,155,.12); }
+:root[data-skin="hmi"][data-skin-theme="nightshift"] { --panel: #262a2e; --text: #d9dde0; --dim: #9aa2a9; --cyan: #4a8fd8; --cyan-bright: #4a8fd8; --line: #3e454c; --mini-on: #0c1116; --mini-soft: rgba(74,143,216,.14); }
+:root[data-skin="hmi"][data-skin-theme="hazard"] { --panel: #242424; --text: #efefef; --dim: #a8a8a8; --cyan: #f2c200; --cyan-bright: #f2c200; --line: #3d3d3d; --mini-on: #111111; --mini-soft: rgba(242,194,0,.12); }
+:root[data-skin="swiss"][data-skin-theme="signal"] { --panel: #ffffff; --text: #111111; --dim: #555555; --cyan: #e30613; --cyan-bright: #e30613; --line: #111111; --mini-on: #ffffff; --mini-soft: rgba(227,6,19,.07); }
+:root[data-skin="swiss"][data-skin-theme="klein"] { --panel: #f6f6f3; --text: #111111; --dim: #555555; --cyan: #002fa7; --cyan-bright: #002fa7; --line: #111111; --mini-on: #ffffff; --mini-soft: rgba(0,47,167,.07); }
+:root[data-skin="swiss"][data-skin-theme="noir"] { --panel: #0d0d0d; --text: #f2f2f2; --dim: #a6a6a6; --cyan: #ff3b30; --cyan-bright: #ff3b30; --line: #f2f2f2; --mini-on: #ffffff; --mini-soft: rgba(255,59,48,.1); }
+:root[data-skin="console"][data-skin-theme="amber"] { --panel: #120d04; --text: #ffb000; --dim: #b87f0b; --cyan: #ffb000; --cyan-bright: #ffb000; --line: #5c4208; --mini-on: #120d04; --mini-soft: rgba(255,176,0,.1); }
+:root[data-skin="console"][data-skin-theme="phosphor"] { --panel: #04100a; --text: #3cff6e; --dim: #25b04f; --cyan: #3cff6e; --cyan-bright: #3cff6e; --line: #135c2c; --mini-on: #04100a; --mini-soft: rgba(60,255,110,.09); }
+:root[data-skin="console"][data-skin-theme="daylight"] { --panel: #ffffff; --text: #1d1d1b; --dim: #5f5f5a; --cyan: #005fcc; --cyan-bright: #005fcc; --line: #c9c9c1; --mini-on: #ffffff; --mini-soft: rgba(0,95,204,.08); }
+:root[data-skin="haven"][data-skin-theme="sand"] { --panel: #fffaf4; --text: #3a2e26; --dim: #7c6c60; --cyan: #b85a36; --cyan-bright: #b85a36; --line: rgba(59,45,35,.14); --mini-on: #ffffff; --mini-soft: rgba(184,90,54,.09); }
+:root[data-skin="haven"][data-skin-theme="sage"] { --panel: #fbfcfa; --text: #25302a; --dim: #66736b; --cyan: #46755a; --cyan-bright: #46755a; --line: rgba(30,45,33,.14); --mini-on: #ffffff; --mini-soft: rgba(70,117,90,.1); }
+:root[data-skin="haven"][data-skin-theme="dusk"] { --panel: #2b2622; --text: #f1e7dc; --dim: #b4a697; --cyan: #e3a468; --cyan-bright: #e3a468; --line: rgba(241,231,220,.12); --mini-on: #211d1a; --mini-soft: rgba(227,164,104,.12); }
+:root[data-skin="ledger"] body, :root[data-skin="ledger"] #msg, :root[data-skin="ledger"] .link { font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif; }
+:root[data-skin="ledger"] .title b { font: 600 15px 'Newsreader', Georgia, serif; letter-spacing: 0; color: var(--text); }
+:root[data-skin="hmi"] body, :root[data-skin="hmi"] #msg, :root[data-skin="hmi"] .link { font-family: 'Barlow', 'Segoe UI', sans-serif; }
+:root[data-skin="hmi"] .title b { font: 700 15px 'Barlow Condensed', sans-serif; letter-spacing: 0; color: var(--text); }
+:root[data-skin="swiss"] body, :root[data-skin="swiss"] #msg, :root[data-skin="swiss"] .link { font-family: 'Archivo', Arial, sans-serif; }
+:root[data-skin="swiss"] .title b { font: 900 16px 'Archivo', Arial, sans-serif; letter-spacing: 0; color: var(--text); }
+:root[data-skin="console"] body, :root[data-skin="console"] #msg, :root[data-skin="console"] .link { font-family: 'IBM Plex Mono', Consolas, monospace; }
+:root[data-skin="console"] .title b { font: 600 13px 'IBM Plex Mono', monospace; letter-spacing: 0; color: var(--text); }
+:root[data-skin="haven"] body, :root[data-skin="haven"] #msg, :root[data-skin="haven"] .link { font-family: 'Atkinson Hyperlegible', 'Segoe UI', sans-serif; }
+:root[data-skin="haven"] .title b { font: 700 15px 'Atkinson Hyperlegible', sans-serif; letter-spacing: 0; color: var(--text); }
+
+:root[data-skin] .panel { box-shadow: none; }
+:root[data-skin] .head, :root[data-skin] .bar { border-color: var(--line); }
+:root[data-skin] .orb i { border-color: var(--cyan); animation: none; }
+:root[data-skin] .orb i:nth-child(2) { background: var(--cyan); box-shadow: none; }
+:root[data-skin] .btn:hover { background: var(--mini-soft); color: var(--text); }
+:root[data-skin] .btn.on { color: var(--cyan); background: var(--mini-soft); border-color: var(--cyan); }
+:root[data-skin] .msg.aura { background: var(--mini-soft); border: 1px solid var(--line); color: var(--text); }
+:root[data-skin] .msg.you { background: var(--cyan); color: var(--mini-on); }
+:root[data-skin] .chip { background: transparent; border-color: var(--line); }
+:root[data-skin] .chip.click:hover { color: var(--text); border-color: var(--cyan); }
+:root[data-skin] .mail { background: var(--panel); }
+:root[data-skin] .mail-head b { color: var(--text); }
+:root[data-skin] .mail-item { background: var(--mini-soft); border-color: var(--line); }
+:root[data-skin] #msg { background: var(--panel); border-color: var(--line); color: var(--text); }
+:root[data-skin] #msg:focus { border-color: var(--cyan); box-shadow: 0 0 0 2px var(--mini-soft); }
+:root[data-skin] .send { background: var(--cyan); color: var(--mini-on); }
+:root[data-skin] .bubble { background: var(--panel); box-shadow: none; border-color: var(--line); }
+:root[data-skin] .log::-webkit-scrollbar-thumb, :root[data-skin] .mail-list::-webkit-scrollbar-thumb { background: var(--line); }
+/* identities */
+:root[data-skin="hmi"] .head { background: var(--line); } :root[data-skin="hmi"] .msg { border-radius: 2px; } :root[data-skin="hmi"] #msg, :root[data-skin="hmi"] .send { border-radius: 2px; }
+:root[data-skin="swiss"] .head { border-bottom: 3px solid var(--text); } :root[data-skin="swiss"] .msg { border-radius: 0; } :root[data-skin="swiss"] #msg { border: 2px solid var(--text); border-radius: 0; } :root[data-skin="swiss"] .send { border-radius: 0; }
+:root[data-skin="console"] .msg { border-radius: 0; background: transparent; } :root[data-skin="console"] .msg.you { background: transparent; color: var(--cyan); border: 1px dashed var(--line); }
+:root[data-skin="console"] .msg.you::before { content: '$ '; opacity: .6; } :root[data-skin="console"] #msg, :root[data-skin="console"] .send { border-radius: 0; }
+:root[data-skin="ledger"] .msg { border-radius: 0; } :root[data-skin="ledger"] .msg.aura { background: transparent; border: 0; border-left: 2px solid var(--cyan); font-family: 'Newsreader', Georgia, serif; font-size: 14px; }
+:root[data-skin="ledger"] #msg { border-radius: 0; border: 0; border-bottom: 1px solid var(--text); } :root[data-skin="ledger"] .send { border-radius: 0; }
+:root[data-skin="haven"] #msg { border-radius: 999px; } :root[data-skin="haven"] .send { border-radius: 50%; }

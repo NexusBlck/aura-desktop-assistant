@@ -1,0 +1,89 @@
+/* HMI - the industrial control room, after ISA-101 "high-performance HMI": neutral greys, colour only for state and
+   alarms, dense condensed labels, header bars on every panel, square controls, tabular numbers.
+   For plants, labs, logistics, operations floors. Themes: daylight · nightshift · hazard. */
+:root[data-skin="hmi"] {
+  --bg: #cfd0cc; --bg2: #cfd0cc; --panel: #e4e5e1; --panel-solid: #ecedea; --surface2: #b9bbb6; --hdr: #c3c5c0;
+  --line: #9fa29c; --line-strong: #6f726c; --rule: #a9aca6;
+  --cyan: #275c9b; --cyan-bright: #1d4777; --cyan-dim: #8aa3c2; --cyan-faint: rgba(39, 92, 155, .12); --on-accent: #fff;
+  --amber: #d99100; --red: #c8101e; --green: #2e7d32; --violet: #5d4f8a;
+  --text: #151617; --text-dim: #45484b; --text-faint: #6c7074;
+  --f-head: 'Barlow Condensed', 'Arial Narrow', sans-serif; --f-ui: 'Barlow', 'Segoe UI', sans-serif;
+  --f-mono: 'JetBrains Mono', Consolas, monospace; --radius: 0px; color-scheme: light;
+}
+:root[data-skin="hmi"][data-skin-theme="nightshift"] {
+  --bg: #1c1f22; --bg2: #1c1f22; --panel: #262a2e; --panel-solid: #2b3034; --surface2: #15181a; --hdr: #333940;
+  --line: #3e454c; --line-strong: #5d666f; --rule: #363c42;
+  --cyan: #4a8fd8; --cyan-bright: #79adea; --cyan-dim: #2c4f75; --cyan-faint: rgba(74, 143, 216, .14); --on-accent: #0c1116;
+  --amber: #e6a417; --red: #ef4b4b; --green: #57b35b;
+  --text: #d9dde0; --text-dim: #9aa2a9; --text-faint: #69727a; color-scheme: dark;
+}
+:root[data-skin="hmi"][data-skin-theme="hazard"] {
+  --bg: #1a1a1a; --bg2: #1a1a1a; --panel: #242424; --panel-solid: #2a2a2a; --surface2: #111; --hdr: #f2c200;
+  --line: #3d3d3d; --line-strong: #6a6a6a; --rule: #333;
+  --cyan: #f2c200; --cyan-bright: #ffd633; --cyan-dim: #7a6300; --cyan-faint: rgba(242, 194, 0, .12); --on-accent: #111;
+  --amber: #ff9f1a; --red: #ff4136; --green: #4caf50;
+  --text: #efefef; --text-dim: #a8a8a8; --text-faint: #707070; color-scheme: dark;
+}
+
+/* labels: condensed caps */
+:root[data-skin="hmi"] .brand .name, :root[data-skin="hmi"] .ph .title, :root[data-skin="hmi"] .section-label, :root[data-skin="hmi"] .page-head h1,
+:root[data-skin="hmi"] .tab, :root[data-skin="hmi"] .btn, :root[data-skin="hmi"] .seg button, :root[data-skin="hmi"] .field label, :root[data-skin="hmi"] .tool,
+:root[data-skin="hmi"] .toast .tt, :root[data-skin="hmi"] .sheet h2, :root[data-skin="hmi"] .pill {
+  font-family: var(--f-head); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+:root[data-skin="hmi"] .brand .name { font-size: 1.3rem; letter-spacing: .12em; }
+:root[data-skin="hmi"] .brand svg { display: none; }
+:root[data-skin="hmi"] .brand::before { content: ''; width: 14px; height: 14px; background: var(--cyan); }
+
+/* panels with a header bar */
+:root[data-skin="hmi"] .panel { background: var(--panel); border: 1px solid var(--line-strong); padding: 0 12px 12px; margin-bottom: 10px; }
+:root[data-skin="hmi"] .ph { margin: 0 -12px 10px; padding: 6px 12px; background: var(--hdr); border-bottom: 1px solid var(--line-strong); }
+:root[data-skin="hmi"] .ph .title { font-size: .9rem; color: var(--text); }
+:root[data-skin="hmi"][data-skin-theme="hazard"] .ph .title, :root[data-skin="hmi"][data-skin-theme="hazard"] .ph .code { color: #111; }
+:root[data-skin="hmi"] .ph .title::before { width: 8px; height: 8px; transform: none; background: var(--green); }
+:root[data-skin="hmi"] .ph .code { font-family: var(--f-mono); font-size: .66rem; color: var(--text-dim); }
+:root[data-skin="hmi"] .section-label { color: var(--text-dim); font-size: .82rem; border-bottom: 2px solid var(--line-strong); padding-bottom: 4px; }
+:root[data-skin="hmi"][data-skin-theme="hazard"] .section-label { border-image: repeating-linear-gradient(-45deg, #f2c200 0 8px, #111 8px 16px) 2; }
+
+/* controls: raised square buttons */
+:root[data-skin="hmi"] .btn { border: 2px solid var(--line-strong); background: var(--panel-solid); color: var(--text); font-size: .9rem; }
+:root[data-skin="hmi"] .btn:active { background: var(--hdr); box-shadow: inset 0 2px 0 rgba(0, 0, 0, .25); }
+:root[data-skin="hmi"] .btn.solid { background: var(--cyan); border-color: var(--cyan); color: var(--on-accent); }
+:root[data-skin="hmi"] .chip { border: 1px solid var(--line-strong); background: var(--panel-solid); font-family: var(--f-ui); font-weight: 600; }
+:root[data-skin="hmi"] .input, :root[data-skin="hmi"] .textarea { border: 1px solid var(--line-strong); font-family: var(--f-mono); }
+:root[data-skin="hmi"] .seg button { border: 1px solid var(--line-strong); font-size: .78rem; }
+
+/* tab bar: segmented cells */
+:root[data-skin="hmi"] .tabbar { border-top: 2px solid var(--line-strong); gap: 1px; background: var(--line-strong); }
+:root[data-skin="hmi"] .tab { background: var(--surface2); color: var(--text-dim); font-size: .74rem; }
+:root[data-skin="hmi"] .tab.active { background: var(--cyan); color: var(--on-accent); }
+:root[data-skin="hmi"] .tab.active::after { display: none; }
+
+/* status: an annunciator tile; state changes its colour */
+:root[data-skin="hmi"] .reactor { border: 2px solid var(--line-strong); background: var(--panel-solid); min-height: 0; max-width: none; }
+:root[data-skin="hmi"] .core-text { min-height: 0; padding: 14px; flex-direction: row; justify-content: space-between; text-align: left; gap: 10px; flex-wrap: wrap; }
+:root[data-skin="hmi"] .core-text .l1 { font-family: var(--f-head); letter-spacing: .1em; font-size: .78rem; color: var(--text-dim); width: 100%; }
+:root[data-skin="hmi"] .core-text .l2 { font-family: var(--f-head); font-weight: 700; font-size: 2.1rem; letter-spacing: .06em; margin: 0; }
+:root[data-skin="hmi"] .core-text .l3 { font-family: var(--f-mono); font-size: .72rem; letter-spacing: 0; align-self: flex-end; }
+:root[data-skin="hmi"] body.thinking .reactor { border-color: var(--amber); box-shadow: inset 6px 0 0 var(--amber); }
+:root[data-skin="hmi"] body.speaking .reactor, :root[data-skin="hmi"] body.listening .reactor { border-color: var(--green); box-shadow: inset 6px 0 0 var(--green); }
+:root[data-skin="hmi"] .callout { background: var(--panel-solid); border: 1px solid var(--line-strong); font-family: var(--f-head); letter-spacing: .06em; font-size: .72rem; text-transform: uppercase; }
+:root[data-skin="hmi"] .callout b, :root[data-skin="hmi"] .stat b, :root[data-skin="hmi"] .gauge .val, :root[data-skin="hmi"] .focus .ftime {
+  font-family: var(--f-mono); font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0; }
+:root[data-skin="hmi"] .kv, :root[data-skin="hmi"] .stat { font-family: var(--f-head); letter-spacing: .05em; text-transform: uppercase; }
+:root[data-skin="hmi"] .bar { height: 8px; border: 1px solid var(--line-strong); background: var(--panel-solid); }
+
+/* conversation: an event log */
+:root[data-skin="hmi"] .t-line { font-family: var(--f-ui); }
+:root[data-skin="hmi"] .t-line .tag { font-family: var(--f-mono); letter-spacing: 0; font-size: .7rem; }
+:root[data-skin="hmi"] .t-aura { border-left: 4px solid var(--line-strong); background: var(--panel); padding: 6px 10px; }
+:root[data-skin="hmi"] .cmd-box { border: 2px solid var(--line-strong); }
+:root[data-skin="hmi"] .cmd-box .prompt { color: var(--text-dim); font-family: var(--f-mono); }
+:root[data-skin="hmi"] .tool { border: 1px solid var(--line-strong); background: var(--panel); font-size: .78rem; }
+:root[data-skin="hmi"] .tool svg { color: var(--text-dim); }
+:root[data-skin="hmi"] .toast { border: 2px solid var(--line-strong); border-left-width: 8px; }
+:root[data-skin="hmi"] .toast.reminder { border-left-color: var(--amber); } :root[data-skin="hmi"] .toast.error { border-left-color: var(--red); } :root[data-skin="hmi"] .toast.focus { border-left-color: var(--green); }
+@media (min-width: 768px) {
+  :root[data-skin="hmi"] #app > .tabbar { background: var(--surface2); gap: 0; padding-top: 0; border-right: 2px solid var(--line-strong); }
+  :root[data-skin="hmi"] .tab { height: 72px; border-bottom: 1px solid var(--line-strong); }
+  :root[data-skin="hmi"] .ip-talk { border-radius: 0; }
+}

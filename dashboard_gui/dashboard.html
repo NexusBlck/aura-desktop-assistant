@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AURA</title>
+<style>
+  :root {
+    --cyan: #3ad6ff;
+    --cyan-bright: #7de8ff;
+    --cyan-dim: #1c6e85;
+    --bg: #04070a;
+    --panel: rgba(8, 18, 26, 0.82);
+    --panel-border: rgba(58, 214, 255, 0.25);
+    --text: #d9f4ff;
+    --text-dim: #6f95a5;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    background: var(--bg);
+    font-family: 'Consolas', 'Segoe UI', monospace;
+    color: var(--cyan);
+  }
+  body {
+    display: flex; flex-direction: column; height: 100vh;
+    background:
+      radial-gradient(circle at 50% 45%, rgba(58,214,255,0.08), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(58,214,255,0.015) 0px, rgba(58,214,255,0.015) 1px, transparent 1px, transparent 3px),
+      var(--bg);
+    padding: 14px 20px;
+  }
+
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 4px 14px 4px; flex-shrink: 0;
+  }
+  .header-icons { display: flex; gap: 14px; font-size: 15px; color: var(--cyan-dim); }
+  h1 {
+    margin: 0; font-size: 24px; font-weight: 300; letter-spacing: 6px;
+    text-shadow: 0 0 16px rgba(58,214,255,0.7), 0 0 40px rgba(58,214,255,0.3);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+  .layout {
+    flex: 1; display: grid; grid-template-columns: 300px 1fr 340px;
+    gap: 16px; min-height: 0;
+  }
+  .col { display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+
+  .panel {
+    background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 14px 16px; position: relative;
+    box-shadow: 0 0 24px rgba(58,214,255,0.05) inset;
+  }
+  .panel::before {
+    content: ""; position: absolute; top: -1px; left: 14px; width: 26px; height: 2px;
+    background: var(--cyan); box-shadow: 0 0 8px var(--cyan);
+  }
+  .panel-label {
+    font-size: 10px; letter-spacing: 3px; color: var(--cyan-dim);
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .stat-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 13px; color: var(--text); padding: 5px 0;
+    border-bottom: 1px solid rgba(58,214,255,0.08);
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-row .val { color: var(--cyan-bright); font-weight: bold; text-shadow: 0 0 6px rgba(58,214,255,0.4); }
+  .empty { color: #2f4a55; font-size: 12px; font-style: italic; }
+
+  .tabs { display: flex; justify-content: center; gap: 6px; margin-bottom: 14px; flex-shrink: 0; }
+  .tab-btn {
+    padding: 6px 18px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--cyan-dim); border: 1px solid var(--panel-border); border-radius: 4px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .tab-btn.active { color: var(--cyan-bright); border-color: var(--cyan); box-shadow: 0 0 8px rgba(58,214,255,0.3); background: rgba(58,214,255,0.08); }
+  .tab-btn:hover { color: var(--cyan-bright); }
+
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; padding-bottom: 14px; }
+  .scroll-box { max-height: 220px; overflow-y: auto; }
+  .list-item { font-size: 12px; color: var(--text); padding: 4px 0; border-bottom: 1px solid rgba(58,214,255,0.06); }
+  .list-item.done { color: #3a5866; text-decoration: line-through; }
+
+  .hero {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .hero-ring-wrap { position: relative; width: 300px; height: 300px; }
+  .ring {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 1px solid var(--cyan-dim);
+  }
+  .ring.r1 { border-top-color: var(--cyan); box-shadow: 0 0 20px rgba(58,214,255,0.2); animation: spin 10s linear infinite; }
+  .ring.r2 { inset: 24px; border-right-color: var(--cyan-bright); border-top-color: transparent; animation: spin 7s linear infinite reverse; }
+  .ring.r3 { inset: 48px; border: 1px dashed var(--cyan-dim); opacity: 0.6; animation: spin 26s linear infinite; }
+  .ring.r4 { inset: 70px; border-top-color: var(--cyan); border-color: transparent; box-shadow: 0 0 14px rgba(58,214,255,0.3); animation: spin 4.5s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .hero-core {
+    position: absolute; inset: 110px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(58,214,255,0.35), rgba(58,214,255,0.05) 70%, transparent);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+  }
+  .hero-core .label { font-size: 9px; letter-spacing: 2px; color: var(--cyan-dim); text-transform: uppercase; }
+  .hero-core .value { font-size: 30px; color: var(--cyan-bright); text-shadow: 0 0 14px rgba(58,214,255,0.7); }
+  .hero-caption { margin-top: 22px; font-size: 12px; color: var(--text-dim); letter-spacing: 1px; text-align: center; max-width: 380px; }
+
+  canvas { max-height: 150px; }
+
+  .feed { flex: 1; overflow-y: auto; min-height: 0; }
+  .feed-item {
+    display: flex; gap: 10px; padding: 8px 0;
+    border-bottom: 1px solid rgba(58,214,255,0.08);
+  }
+  .feed-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--cyan);
+    box-shadow: 0 0 6px var(--cyan); margin-top: 5px; flex-shrink: 0;
+  }
+  .feed-text { font-size: 12px; color: var(--text); line-height: 1.4; }
+  .feed-meta { font-size: 10px; color: var(--cyan-dim); margin-bottom: 2px; }
+
+  footer {
+    flex-shrink: 0; display: flex; justify-content: center; align-items: center;
+    gap: 34px; padding-top: 14px;
+  }
+  .nav-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    font-size: 9px; letter-spacing: 1px; color: var(--cyan-dim);
+    text-transform: uppercase; cursor: pointer;
+  }
+  .nav-btn .icon {
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--cyan-dim);
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover .icon { border-color: var(--cyan); color: var(--cyan-bright); box-shadow: 0 0 10px rgba(58,214,255,0.4); }
+  .nav-btn.center .icon {
+    width: 46px; height: 46px; border-color: var(--cyan);
+    box-shadow: 0 0 14px rgba(58,214,255,0.4);
+    background: radial-gradient(circle, rgba(58,214,255,0.15), transparent);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-icons"><span>&#9679;</span><span>&#9670;</span><span>&#9635;</span></div>
+  <h1>AURA</h1>
+  <div class="header-icons"><span>&#8635;</span><span>&#9776;</span></div>
+</header>
+
+<div class="tabs">
+  <div class="tab-btn active" id="tabOverviewBtn">Overview</div>
+  <div class="tab-btn" id="tabProfileBtn">Full Profile</div>
+</div>
+
+<div id="overviewView">
+<div class="layout">
+
+  <div class="col">
+    <div class="panel">
+      <div class="panel-label">This Week</div>
+      <div id="statsBox"><div class="empty">Loading...</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Session Breakdown</div>
+      <canvas id="donutChart"></canvas>
+    </div>
+    <div class="panel" style="flex:1; display:flex; flex-direction:column;">
+      <div class="panel-label">Mood Trend</div>
+      <canvas id="moodSparkline"></canvas>
+    </div>
+    <div class="panel">
+      <div class="panel-label">System Snapshot</div>
+      <div class="stat-row"><span>CPU</span><span class="val" id="dashCpu">--%</span></div>
+      <div class="stat-row"><span>RAM</span><span class="val" id="dashRam">--%</span></div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Session Enjoyment Trend</div>
+      <canvas id="ratingChart"></canvas>
+    </div>
+  </div>
+
+  <div class="col hero">
+    <div class="hero-ring-wrap">
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+      <div class="ring r3"></div>
+      <div class="ring r4"></div>
+      <div class="hero-core">
+        <div class="label">Avg Mood</div>
+        <div class="value" id="heroMood">--</div>
+      </div>
+    </div>
+    <div class="hero-caption" id="heroCaption">Awaiting data...</div>
+  </div>
+
+  <div class="col">
+    <div class="panel">
+      <div class="panel-label">Tasks / Papers Per Week</div>
+      <canvas id="barChart"></canvas>
+    </div>
+    <div class="panel" style="flex:1; display:flex; flex-direction:column; min-height:0;">
+      <div class="panel-label">Recent Journal Activity</div>
+      <div class="feed" id="journalFeed"><div class="empty">No entries yet.</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Cat Assistant</div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="font-size:34px;">&#127968;<span style="font-size:20px; margin-left:-16px;">&#128568;</span></div>
+        <div style="font-size:11px; color:var(--text-dim);">
+          Highlight any text anywhere, press <b style="color:var(--cyan-bright);">Ctrl+Alt+E</b>,
+          and the cat pops up to explain it.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /overviewView -->
+
+<div id="profileView" style="display:none; flex:1; overflow-y:auto; min-height:0;">
+  <div class="profile-grid">
+    <div class="panel">
+      <div class="panel-label">Facts AURA Knows</div>
+      <div id="profileFacts"><div class="empty">Nothing yet.</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Ongoing Projects</div>
+      <div id="profileProjects"><div class="empty">Nothing yet.</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Preferences</div>
+      <div id="profilePrefs"><div class="empty">Nothing yet.</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">All-Time Sessions</div>
+      <canvas id="allTimeChart"></canvas>
+    </div>
+    <div class="panel" style="grid-column: span 2;">
+      <div class="panel-label">Full Session Log</div>
+      <div id="profileSessions" class="scroll-box"><div class="empty">Nothing yet.</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">All Tasks</div>
+      <div id="profileTasks" class="scroll-box"><div class="empty">Nothing yet.</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">All Papers</div>
+      <div id="profilePapers" class="scroll-box"><div class="empty">Nothing yet.</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="nav-btn" id="navSessions"><div class="icon">&#9673;</div>Sessions</div>
+  <div class="nav-btn" id="navTasks"><div class="icon">&#9635;</div>Tasks</div>
+  <div class="nav-btn center" id="navRefresh"><div class="icon">&#8635;</div>Refresh</div>
+  <div class="nav-btn" id="navJournal"><div class="icon">&#9998;</div>Journal</div>
+  <div class="nav-btn" id="navPapers"><div class="icon">&#9737;</div>Papers</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let donutChart, barChart, moodSparkline, ratingChart;
+const CYAN = '#3ad6ff', BRIGHT = '#7de8ff', DIM = '#4a6b78', TEXT = '#d9f4ff';
+
+async function refreshDashboard() {
+  const raw = await window.pywebview.api.get_dashboard_data();
+  const data = JSON.parse(raw);
+  const summary = data.summary;
+  const trend = data.trend;
+
+  document.getElementById('statsBox').innerHTML = `
+    <div class="stat-row"><span>Sessions logged</span><span class="val">${summary.total_sessions}</span></div>
+    <div class="stat-row"><span>Tasks completed</span><span class="val">${summary.tasks_completed}</span></div>
+    <div class="stat-row"><span>Papers added</span><span class="val">${summary.papers_added}</span></div>
+    <div class="stat-row"><span>Journal entries</span><span class="val">${summary.journal_entries}</span></div>
+  `;
+
+  document.getElementById('heroMood').textContent = summary.avg_mood != null ? summary.avg_mood + '/10' : '--';
+  document.getElementById('heroCaption').textContent = summary.avg_mood != null
+    ? 'Based on ' + summary.journal_entries + ' check-in(s) this week'
+    : 'No journal check-ins logged this week yet';
+
+  if (data.vitals) {
+    document.getElementById('dashCpu').textContent = data.vitals.cpu != null ? Math.round(data.vitals.cpu) + '%' : '--';
+    document.getElementById('dashRam').textContent = data.vitals.ram != null ? Math.round(data.vitals.ram) + '%' : '--';
+  }
+
+  const donutLabels = Object.keys(trend.session_type_totals);
+  const donutValues = Object.values(trend.session_type_totals);
+  if (donutChart) donutChart.destroy();
+  donutChart = new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: {
+      labels: donutLabels.length ? donutLabels : ['No sessions yet'],
+      datasets: [{
+        data: donutValues.length ? donutValues : [1],
+        backgroundColor: ['#3ad6ff', '#1c6e85', '#7de8ff', '#0d3a48', '#5588ff', '#2a4a55'],
+        borderColor: '#04070a', borderWidth: 2,
+      }]
+    },
+    options: {
+      cutout: '68%',
+      plugins: { legend: { position: 'bottom', labels: { color: TEXT, font: { size: 10 }, boxWidth: 10 } } }
+    }
+  });
+
+  if (moodSparkline) moodSparkline.destroy();
+  moodSparkline = new Chart(document.getElementById('moodSparkline'), {
+    type: 'line',
+    data: { labels: trend.week_labels, datasets: [{ data: trend.mood_per_week, borderColor: CYAN, borderWidth: 2, pointRadius: 0, spanGaps: true, tension: 0.35 }] },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { x: { display: false }, y: { min: 0, max: 10, ticks: { color: DIM, font: { size: 9 } } } }
+    }
+  });
+
+  if (ratingChart) ratingChart.destroy();
+  ratingChart = new Chart(document.getElementById('ratingChart'), {
+    type: 'line',
+    data: { labels: trend.week_labels, datasets: [{ label: 'Enjoyment', data: trend.rating_per_week, borderColor: '#7de8ff', borderWidth: 2, pointRadius: 2, spanGaps: true, tension: 0.35 }] },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { x: { ticks: { color: DIM, font: { size: 9 } } }, y: { min: 0, max: 10, ticks: { color: DIM, font: { size: 9 } } } }
+    }
+  });
+
+  if (barChart) barChart.destroy();
+  barChart = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: trend.week_labels,
+      datasets: [
+        { label: 'Tasks', data: trend.tasks_per_week, backgroundColor: '#3ad6ff' },
+        { label: 'Papers', data: trend.papers_per_week, backgroundColor: '#1c6e85' },
+      ]
+    },
+    options: {
+      scales: { x: { ticks: { color: DIM, font: { size: 9 } } }, y: { ticks: { color: DIM, font: { size: 9 } }, beginAtZero: true } },
+      plugins: { legend: { labels: { color: TEXT, font: { size: 10 } } } }
+    }
+  });
+
+  const feed = document.getElementById('journalFeed');
+  if (!trend.recent_journal || trend.recent_journal.length === 0) {
+    feed.innerHTML = '<div class="empty">No entries yet - say "AURA, journal time".</div>';
+  } else {
+    feed.innerHTML = trend.recent_journal.map(j => {
+      const date = new Date(j.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      const mood = j.mood != null ? `Mood ${j.mood}/10` : '';
+      return `<div class="feed-item"><div class="feed-dot"></div><div>
+        <div class="feed-meta">${date} &middot; ${mood}</div>
+        <div class="feed-text">${j.good_thing || ''} ${j.on_mind ? '&mdash; ' + j.on_mind : ''}</div>
+      </div></div>`;
+    }).join('');
+  }
+}
+
+window.refreshDashboard = refreshDashboard;
+
+let allTimeChart;
+
+async function refreshProfile() {
+  if (!window.pywebview || !window.pywebview.api) return;
+  const raw = await window.pywebview.api.get_full_profile_data();
+  const data = JSON.parse(raw);
+
+  const renderTextList = (id, items) => {
+    const el = document.getElementById(id);
+    el.innerHTML = items.length
+      ? items.map(t => `<div class="list-item">${t}</div>`).join('')
+      : '<div class="empty">Nothing yet.</div>';
+  };
+  renderTextList('profileFacts', data.facts || []);
+  renderTextList('profileProjects', data.projects || []);
+  renderTextList('profilePrefs', data.preferences || []);
+
+  const taskList = document.getElementById('profileTasks');
+  taskList.innerHTML = (data.tasks && data.tasks.length)
+    ? data.tasks.map(t => `<div class="list-item ${t.done ? 'done' : ''}">${t.done ? '\u2713' : '\u25c7'} ${t.text}</div>`).join('')
+    : '<div class="empty">Nothing yet.</div>';
+
+  const paperList = document.getElementById('profilePapers');
+  paperList.innerHTML = (data.papers && data.papers.length)
+    ? data.papers.map(p => `<div class="list-item">${p.title}${p.year ? ' (' + p.year + ')' : ''}</div>`).join('')
+    : '<div class="empty">Nothing yet.</div>';
+
+  const sessionList = document.getElementById('profileSessions');
+  sessionList.innerHTML = (data.sessions && data.sessions.length)
+    ? data.sessions.map(s => {
+        const d = new Date(s.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        const r = s.rating != null ? `${s.rating}/10` : 'no rating';
+        return `<div class="list-item">${d} &middot; ${s.type} &middot; ${r}</div>`;
+      }).join('')
+    : '<div class="empty">Nothing yet.</div>';
+
+  const labels = Object.keys(data.session_type_totals_alltime || {});
+  const values = Object.values(data.session_type_totals_alltime || {});
+  if (allTimeChart) allTimeChart.destroy();
+  allTimeChart = new Chart(document.getElementById('allTimeChart'), {
+    type: 'doughnut',
+    data: {
+      labels: labels.length ? labels : ['No sessions yet'],
+      datasets: [{ data: values.length ? values : [1], backgroundColor: ['#3ad6ff','#1c6e85','#7de8ff','#0d3a48','#5588ff','#2a4a55'], borderColor: '#04070a', borderWidth: 2 }]
+    },
+    options: { cutout: '60%', plugins: { legend: { position: 'bottom', labels: { color: TEXT, font: { size: 10 }, boxWidth: 10 } } } }
+  });
+}
+
+function showTab(tab) {
+  const overview = document.getElementById('overviewView');
+  const profile = document.getElementById('profileView');
+  const tabOverviewBtn = document.getElementById('tabOverviewBtn');
+  const tabProfileBtn = document.getElementById('tabProfileBtn');
+  if (tab === 'profile') {
+    overview.style.display = 'none';
+    profile.style.display = 'flex';
+    tabOverviewBtn.classList.remove('active');
+    tabProfileBtn.classList.add('active');
+    refreshProfile();
+  } else {
+    overview.style.display = 'block';
+    profile.style.display = 'none';
+    tabOverviewBtn.classList.add('active');
+    tabProfileBtn.classList.remove('active');
+    refreshDashboard();
+  }
+}
+
+document.getElementById('tabOverviewBtn').addEventListener('click', () => showTab('overview'));
+document.getElementById('tabProfileBtn').addEventListener('click', () => showTab('profile'));
+
+document.getElementById('navRefresh').addEventListener('click', () => {
+  const onProfile = document.getElementById('profileView').style.display !== 'none';
+  onProfile ? refreshProfile() : refreshDashboard();
+});
+document.getElementById('navSessions').addEventListener('click', () => showTab('profile'));
+document.getElementById('navTasks').addEventListener('click', () => showTab('profile'));
+document.getElementById('navPapers').addEventListener('click', () => showTab('profile'));
+document.getElementById('navJournal').addEventListener('click', () => showTab('overview'));
+
+window.addEventListener('pywebviewready', refreshDashboard);
+</script>
+</body>
+</html>

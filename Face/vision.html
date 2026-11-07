@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AURA - Vision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #02050a; --panel: rgba(4, 14, 22, 0.78); --line: rgba(58,214,255,0.28); --line-strong: rgba(58,214,255,0.6);
+    --cyan: #3ad6ff; --cyan-bright: #9ef3ff; --cyan-dim: #1b6a80; --amber: #ffb547; --red: #ff5a6a; --green: #4ef0a3;
+    --text: #d6f6ff; --text-dim: #7fa6b5; --text-faint: #3c6273;
+    --f-head: 'Orbitron', 'Segoe UI', sans-serif; --f-ui: 'Rajdhani', 'Segoe UI', sans-serif; --f-mono: 'Share Tech Mono', 'Consolas', monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--f-ui); }
+  button { font-family: var(--f-ui); cursor: pointer; }
+
+  /* camera + overlay fill the window */
+  #stage { position: fixed; inset: 0; background: #000; cursor: crosshair; }
+  #feed { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: saturate(1.05) contrast(1.05); }
+  #overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .tint { position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(0,20,30,0.55) 100%),
+                repeating-linear-gradient(0deg, rgba(58,214,255,0.035) 0 1px, transparent 1px 3px); }
+  .tint::after { content: ""; position: absolute; left: 0; right: 0; height: 120px; top: -120px;
+    background: linear-gradient(180deg, transparent, rgba(58,214,255,0.10), transparent); animation: sweep 5s linear infinite; }
+  @keyframes sweep { to { top: 100%; } }
+
+  /* helmet frame: curved corner pieces */
+  .frame { position: fixed; pointer-events: none; width: 140px; height: 140px; border: 2px solid var(--cyan); opacity: .75; filter: drop-shadow(0 0 6px var(--cyan)); }
+  .f-tl { top: 18px; left: 18px; border-right: 0; border-bottom: 0; border-top-left-radius: 30px; }
+  .f-tr { top: 18px; right: 18px; border-left: 0; border-bottom: 0; border-top-right-radius: 30px; }
+  .f-bl { bottom: 18px; left: 18px; border-right: 0; border-top: 0; border-bottom-left-radius: 30px; }
+  .f-br { bottom: 18px; right: 18px; border-left: 0; border-top: 0; border-bottom-right-radius: 30px; }
+
+  /* top HUD */
+  .top { position: fixed; top: 26px; left: 50%; transform: translateX(-50%); display: flex; gap: 14px; align-items: center; pointer-events: none; }
+  .brand { font-family: var(--f-head); font-weight: 900; letter-spacing: 8px; font-size: 20px; color: var(--cyan-bright);
+    text-shadow: 0 0 14px rgba(58,214,255,.9); }
+  .pill { font-family: var(--f-mono); font-size: 12px; letter-spacing: 2px; color: var(--cyan); border: 1px solid var(--line-strong);
+    padding: 4px 12px; background: rgba(2,10,16,0.7); }
+  .live { color: var(--red); border-color: rgba(255,90,106,0.6); }
+  .live::before { content: "●"; margin-right: 6px; animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: .2; } }
+
+  .telemetry { position: fixed; top: 26px; right: 44px; text-align: right; font-family: var(--f-mono); font-size: 12px; color: var(--text-dim);
+    letter-spacing: 1px; line-height: 1.7; pointer-events: none; }
+  .telemetry b { color: var(--cyan-bright); font-weight: normal; }
+
+  /* left: detected targets */
+  .targets { position: fixed; left: 40px; top: 170px; width: 250px; max-height: calc(100vh - 360px); overflow: hidden; }
+  .hudtitle { font-family: var(--f-head); font-size: 11px; letter-spacing: 3px; color: var(--cyan); margin-bottom: 8px; display: flex; gap: 8px; align-items: center; }
+  .hudtitle::before { content: ""; width: 6px; height: 6px; background: var(--cyan); transform: rotate(45deg); box-shadow: 0 0 8px var(--cyan); }
+  .targets ul, .history ul { list-style: none; margin: 0; padding: 0; }
+  .targets li { display: grid; grid-template-columns: 38px 1fr 42px; gap: 8px; align-items: center; font-family: var(--f-mono); font-size: 12px;
+    padding: 5px 8px; margin-bottom: 4px; background: var(--panel); border-left: 2px solid var(--cyan); animation: slidein .3s ease; }
+  .targets li .id { color: var(--text-faint); } .targets li .nm { color: var(--text); text-transform: uppercase; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .targets li .sc { color: var(--cyan-bright); text-align: right; }
+  .targets li.ai { border-left-color: var(--amber); } .targets li.ai .sc { color: var(--amber); }
+  @keyframes slidein { from { opacity: 0; transform: translateX(-10px); } }
+  .history { position: fixed; left: 40px; bottom: 150px; width: 250px; }
+  .history li { font-family: var(--f-mono); font-size: 12px; color: var(--text-dim); padding: 4px 0; cursor: pointer; border-bottom: 1px dashed rgba(58,214,255,0.15); }
+  .history li:hover { color: var(--cyan-bright); }
+
+  /* right: identification panel */
+  #info { position: fixed; top: 150px; right: 40px; width: 360px; max-height: calc(100vh - 300px); overflow-y: auto; background: rgba(3,12,20,0.88);
+    border: 1px solid var(--line-strong); padding: 18px 20px; transform: translateX(420px); opacity: 0; transition: transform .35s ease, opacity .35s;
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); box-shadow: 0 0 30px rgba(58,214,255,0.15); }
+  #info.open { transform: none; opacity: 1; }
+  #info .close { position: absolute; top: 10px; right: 14px; background: none; border: 0; color: var(--text-dim); font-size: 18px; }
+  #info .close:hover { color: var(--red); }
+  #info .kicker { font-family: var(--f-mono); font-size: 11px; letter-spacing: 3px; color: var(--cyan); }
+  #info h2 { font-family: var(--f-head); font-size: 20px; letter-spacing: 1px; margin: 6px 0 2px; color: #fff; line-height: 1.3; }
+  #info .cat { font-family: var(--f-mono); font-size: 12px; color: var(--text-dim); letter-spacing: 1px; margin-bottom: 12px; }
+  .conf { display: flex; align-items: center; gap: 10px; font-family: var(--f-mono); font-size: 11px; color: var(--text-dim); letter-spacing: 1px; margin-bottom: 12px; }
+  .conf .meter { flex: 1; height: 5px; background: rgba(58,214,255,0.12); }
+  .conf .meter i { display: block; height: 100%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); transition: width .6s; }
+  #info p { margin: 0 0 12px; font-size: 16px; line-height: 1.45; }
+  #info table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+  #info th { text-align: left; vertical-align: top; font-family: var(--f-mono); font-weight: normal; font-size: 12px; color: var(--text-dim); padding: 6px 10px 6px 0; width: 38%;
+    border-top: 1px solid rgba(58,214,255,0.12); }
+  #info td { font-size: 15px; padding: 6px 0; border-top: 1px solid rgba(58,214,255,0.12); }
+  #info .fact { border-left: 2px solid var(--amber); padding: 8px 12px; background: rgba(255,181,71,0.06); font-size: 15px; }
+  #info .fact b { display: block; font-family: var(--f-mono); font-weight: normal; font-size: 11px; letter-spacing: 2px; color: var(--amber); margin-bottom: 3px; }
+  #info .loading { font-family: var(--f-mono); color: var(--cyan); letter-spacing: 2px; }
+  #info .err { color: var(--red); font-size: 15px; }
+
+  /* bottom toolbar */
+  .toolbar { position: fixed; bottom: 34px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; align-items: center; }
+  .tbtn { border: 1px solid var(--line-strong); background: rgba(2,10,16,0.8); color: var(--cyan-bright); font-family: var(--f-head); font-size: 11px;
+    letter-spacing: 3px; padding: 10px 18px; transition: all .15s; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); }
+  .tbtn:hover { background: rgba(58,214,255,0.15); box-shadow: 0 0 16px rgba(58,214,255,0.35); }
+  .tbtn.off { color: var(--text-faint); }
+  .tbtn.danger { color: var(--red); border-color: rgba(255,90,106,0.6); }
+  .tbtn.danger:hover { background: rgba(255,90,106,0.12); }
+  .tbtn:disabled { opacity: .4; cursor: default; }
+  .hint { position: fixed; bottom: 88px; left: 50%; transform: translateX(-50%); font-family: var(--f-mono); font-size: 12px; letter-spacing: 3px;
+    color: var(--text-dim); pointer-events: none; text-shadow: 0 0 6px #000; }
+
+  /* status overlay (loading / camera off) */
+  #status { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; pointer-events: none; }
+  #status .big { font-family: var(--f-head); font-size: 22px; letter-spacing: 6px; color: var(--cyan-bright); text-shadow: 0 0 14px rgba(58,214,255,.8); }
+  #status .small { font-family: var(--f-mono); font-size: 13px; letter-spacing: 2px; color: var(--text-dim); max-width: 520px; text-align: center; }
+  #status.hidden { display: none; }
+  .spinner { width: 60px; height: 60px; border: 2px solid rgba(58,214,255,0.2); border-top-color: var(--cyan); border-radius: 50%; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <img id="feed" alt="">
+  <canvas id="overlay"></canvas>
+</div>
+<div class="tint"></div>
+<div class="frame f-tl"></div><div class="frame f-tr"></div><div class="frame f-bl"></div><div class="frame f-br"></div>
+
+<div class="top"><span class="brand">AURA</span><span class="pill">VISION MODE</span><span class="pill live" id="liveTag">LIVE</span></div>
+<div class="telemetry">
+  <div>TIME <b id="tClock">--:--:--</b></div>
+  <div>TARGETS <b id="tCount">0</b></div>
+  <div>RECOGNITION <b id="tFps">-- FPS</b></div>
+  <div>MODEL <b id="tModel">LOADING</b></div>
+</div>
+
+<div class="targets"><div class="hudtitle">TARGETS IN VIEW</div><ul id="targetList"></ul></div>
+<div class="history"><div class="hudtitle">IDENTIFIED</div><ul id="historyList"></ul></div>
+
+<aside id="info" aria-live="polite"><button class="close" id="infoClose" aria-label="Close">×</button><div id="infoBody"></div></aside>
+
+<div class="hint" id="hint">CLICK ANYTHING TO IDENTIFY IT</div>
+<div class="toolbar">
+  <button class="tbtn" id="scanBtn">◎ DEEP SCAN</button>
+  <button class="tbtn" id="labelsBtn">▣ LABELS ON</button>
+  <button class="tbtn danger" id="closeBtn">✕ CLOSE CAMERA</button>
+</div>
+
+<div id="status"><div class="spinner"></div><div class="big" id="statusBig">INITIALISING OPTICS</div><div class="small" id="statusSmall">Starting camera…</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const api = () => (window.pywebview && window.pywebview.api) ? window.pywebview.api : null;
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+const feed = $('feed'), overlay = $('overlay'), octx = overlay.getContext('2d');
+const grab = document.createElement('canvas'), gctx = grab.getContext('2d', { willReadFrequently: true });
+let model = null, running = false, showLabels = true, tracks = [], aiTags = [], nextId = 1, pending = null, hover = null;
+let detFrames = 0, detStart = performance.now();
+
+/* ---------------- status overlay */
+function status(big, small, spin = true) {
+  const s = $('status'); s.classList.toggle('hidden', !big);
+  $('statusBig').textContent = big || ''; $('statusSmall').textContent = small || '';
+  s.querySelector('.spinner').style.display = spin ? '' : 'none';
+}
+
+/* ---------------- geometry: where the picture actually sits on screen */
+function imageRect() {
+  const W = overlay.clientWidth, H = overlay.clientHeight, iw = feed.naturalWidth || 16, ih = feed.naturalHeight || 9;
+  const s = Math.min(W / iw, H / ih), w = iw * s, h = ih * s;
+  return { x: (W - w) / 2, y: (H - h) / 2, w, h };
+}
+const toScreen = (b, r) => ({ x: r.x + b.x * r.w, y: r.y + b.y * r.h, w: b.w * r.w, h: b.h * r.h });
+
+/* ---------------- recognition model (runs locally in this window) */
+let modelLoading = null;
+function loadModel() { return modelLoading || (modelLoading = _loadModel()); }
+async function _loadModel() {
+  try {
+    // Use the copy AURA saved on this PC if it's there (instant, works offline),
+    // otherwise the online one.
+    let modelUrl;
+    try { if ((await fetch('/models/ssd_mobilenet_v2/model.json', { method: 'HEAD' })).ok) modelUrl = '/models/ssd_mobilenet_v2/model.json'; } catch (e) {}
+    model = await cocoSsd.load(modelUrl ? { base: 'mobilenet_v2', modelUrl } : { base: 'mobilenet_v2' });
+    // warm-up pass so the first real frame isn't slow
+    try { const warm = document.createElement('canvas'); warm.width = 64; warm.height = 64; await model.detect(warm); } catch (e) {}
+    $('tModel').textContent = 'COCO-SSD · 80 CLASSES';
+  } catch (e) {
+    console.error(e); $('tModel').textContent = 'OFFLINE';
+    status('RECOGNITION OFFLINE', 'Couldn\'t load the recognition model (needs internet the first time). Clicking still works - AURA\'s AI will identify what you click.', false);
+    setTimeout(() => status(null), 6000);
+  }
+}
+
+/* ---------------- tracking: keep boxes steady and give each object an ID */
+function iou(a, b) {
+  const x1 = Math.max(a.x, b.x), y1 = Math.max(a.y, b.y), x2 = Math.min(a.x + a.w, b.x + b.w), y2 = Math.min(a.y + a.h, b.y + b.h);
+  const inter = Math.max(0, x2 - x1) * Math.max(0, y2 - y1);
+  return inter / (a.w * a.h + b.w * b.h - inter || 1);
+}
+function updateTracks(dets, now) {
+  const used = new Set();
+  for (const d of dets) {
+    let best = null, bestIou = 0.25;
+    for (const t of tracks) { if (used.has(t) || t.cls !== d.cls) continue; const v = iou(t.target, d.box); if (v > bestIou) { best = t; bestIou = v; } }
+    if (best) { best.target = d.box; best.score = d.score; best.seen = now; used.add(best); }
+    else { const t = { id: nextId++, cls: d.cls, score: d.score, box: { ...d.box }, target: d.box, born: now, seen: now }; tracks.push(t); used.add(t); }
+  }
+  tracks = tracks.filter(t => now - t.seen < 900);
+}
+
+async function detectLoop() {
+  if (!running) return;
+  if (model && feed.naturalWidth) {
+    const w = 640, h = Math.round(640 * feed.naturalHeight / feed.naturalWidth);
+    if (grab.width !== w) { grab.width = w; grab.height = h; }
+    try {
+      gctx.drawImage(feed, 0, 0, w, h);
+      const preds = await model.detect(grab, 20, 0.42);
+      updateTracks(preds.map(p => ({ cls: p.class, score: p.score, box: { x: p.bbox[0] / w, y: p.bbox[1] / h, w: p.bbox[2] / w, h: p.bbox[3] / h } })), performance.now());
+      detFrames++;
+    } catch (e) { /* a frame that wasn't ready yet */ }
+  }
+  const elapsed = performance.now() - detStart;
+  if (elapsed > 1000) { $('tFps').textContent = Math.round(detFrames * 1000 / elapsed) + ' FPS'; detFrames = 0; detStart = performance.now(); }
+  setTimeout(detectLoop, model ? 0 : 300);
+}
+
+/* ---------------- drawing the HUD over the camera */
+function bracket(ctx, x, y, w, h, len, color, lw) {
+  len = Math.min(len, w / 3, h / 3); ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.beginPath();
+  ctx.moveTo(x, y + len); ctx.lineTo(x, y); ctx.lineTo(x + len, y);
+  ctx.moveTo(x + w - len, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + len);
+  ctx.moveTo(x + w, y + h - len); ctx.lineTo(x + w, y + h); ctx.lineTo(x + w - len, y + h);
+  ctx.moveTo(x + len, y + h); ctx.lineTo(x, y + h); ctx.lineTo(x, y + h - len); ctx.stroke();
+}
+let placedTags = [];  // label boxes already drawn this frame, so new ones don't cover them
+const overlaps = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+function tag(ctx, x, y, text, sub, color) {
+  ctx.font = '600 13px Orbitron, Segoe UI, sans-serif'; const tw = ctx.measureText(text).width;
+  ctx.font = '11px "Share Tech Mono", Consolas, monospace'; const sw = sub ? ctx.measureText(sub).width : 0;
+  const w = Math.max(tw, sw) + 18, h = sub ? 36 : 22, above = y - h - 6;
+  let ty = above < 96 ? y + 6 : above;  // too close to the top HUD -> tuck inside the box
+  x = Math.max(300, Math.min(x, overlay.clientWidth - 420 - w));  // stay clear of the side panels
+  for (let i = 0; i < 12 && placedTags.some(p => overlaps(p, { x, y: ty, w, h })); i++) ty += h + 4;  // step down past other labels
+  placedTags.push({ x, y: ty, w, h });
+  ctx.fillStyle = 'rgba(2,12,20,0.82)'; ctx.fillRect(x, ty, w, h);
+  ctx.fillStyle = color; ctx.fillRect(x, ty, 3, h);
+  ctx.font = '600 13px Orbitron, Segoe UI, sans-serif'; ctx.fillStyle = '#e8fbff'; ctx.fillText(text, x + 10, ty + 15);
+  if (sub) { ctx.font = '11px "Share Tech Mono", Consolas, monospace'; ctx.fillStyle = color; ctx.fillText(sub, x + 10, ty + 30); }
+}
+function reticle(ctx, cx, cy, t) {
+  ctx.save(); ctx.translate(cx, cy); ctx.strokeStyle = 'rgba(58,214,255,0.55)'; ctx.lineWidth = 1.2;
+  ctx.rotate(t * 0.4);
+  for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.arc(0, 0, 46, i * Math.PI / 2 + 0.2, i * Math.PI / 2 + 1.2); ctx.stroke(); }
+  ctx.rotate(-t * 0.9); ctx.setLineDash([3, 5]); ctx.beginPath(); ctx.arc(0, 0, 30, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+  ctx.restore(); ctx.strokeStyle = 'rgba(158,243,255,0.7)'; ctx.beginPath();
+  ctx.moveTo(cx - 14, cy); ctx.lineTo(cx - 5, cy); ctx.moveTo(cx + 5, cy); ctx.lineTo(cx + 14, cy);
+  ctx.moveTo(cx, cy - 14); ctx.lineTo(cx, cy - 5); ctx.moveTo(cx, cy + 5); ctx.lineTo(cx, cy + 14); ctx.stroke();
+}
+
+function render(now) {
+  requestAnimationFrame(render);
+  const dpr = Math.min(devicePixelRatio || 1, 2), W = overlay.clientWidth, H = overlay.clientHeight;
+  if (overlay.width !== Math.round(W * dpr)) { overlay.width = Math.round(W * dpr); overlay.height = Math.round(H * dpr); }
+  octx.setTransform(dpr, 0, 0, dpr, 0, 0); octx.clearRect(0, 0, W, H);
+  if (!running) return;
+  const r = imageRect(), t = now / 1000;
+  placedTags = [];
+
+  reticle(octx, W / 2, H / 2, t);
+  // edge ticks (a range-finder scale along the picture edges)
+  octx.strokeStyle = 'rgba(58,214,255,0.35)'; octx.lineWidth = 1;
+  for (let i = 0; i <= 40; i++) { const x = r.x + r.w * i / 40, l = i % 5 ? 6 : 12; octx.beginPath(); octx.moveTo(x, r.y + r.h - 2); octx.lineTo(x, r.y + r.h - 2 - l); octx.stroke(); }
+  for (let i = 0; i <= 24; i++) { const y = r.y + r.h * i / 24, l = i % 4 ? 6 : 12; octx.beginPath(); octx.moveTo(r.x + r.w - 2, y); octx.lineTo(r.x + r.w - 2 - l, y); octx.stroke(); }
+
+  if (showLabels) {
+    // AI deep-scan tags (approximate positions - drawn dashed, amber)
+    for (const a of aiTags) {
+      const s = toScreen(a, r); octx.setLineDash([6, 5]); octx.strokeStyle = 'rgba(255,181,71,0.8)'; octx.lineWidth = 1.2;
+      octx.strokeRect(s.x, s.y, s.w, s.h); octx.setLineDash([]); tag(octx, s.x, s.y, a.label.toUpperCase(), 'AI SCAN · APPROX', '#ffb547');
+    }
+    // live tracked objects
+    for (const tr of tracks) {
+      for (const k of ['x', 'y', 'w', 'h']) tr.box[k] += (tr.target[k] - tr.box[k]) * 0.35;  // smooth motion
+      const s = toScreen(tr.box, r), age = now - tr.born, lock = Math.min(1, age / 450), fade = Math.max(0, 1 - (now - tr.seen) / 900);
+      const grow = (1 - lock) * 26, isHover = hover === tr;
+      octx.globalAlpha = fade;
+      const color = isHover ? '#ffffff' : lock < 1 ? '#ffb547' : '#3ad6ff';
+      octx.shadowColor = color; octx.shadowBlur = 14;
+      bracket(octx, s.x - grow, s.y - grow, s.w + grow * 2, s.h + grow * 2, 30, color, isHover ? 4.5 : 3.2);
+      octx.strokeStyle = 'rgba(58,214,255,0.18)'; octx.lineWidth = 1; octx.strokeRect(s.x, s.y, s.w, s.h);
+      octx.shadowBlur = 0;
+      if (isHover) { octx.fillStyle = 'rgba(58,214,255,0.08)'; octx.fillRect(s.x, s.y, s.w, s.h); }
+      // centre pip
+      octx.fillStyle = color; octx.beginPath(); octx.arc(s.x + s.w / 2, s.y + s.h / 2, 2.5, 0, Math.PI * 2); octx.fill();
+      tag(octx, s.x, s.y, tr.cls.toUpperCase() + '  ' + Math.round(tr.score * 100) + '%',
+          `T-${String(tr.id).padStart(2, '0')} · ${lock < 1 ? 'ACQUIRING' : 'LOCKED'} · ${Math.round(s.w)}×${Math.round(s.h)}`, color);
+      octx.globalAlpha = 1;
+    }
+  }
+  // the thing being identified right now: pulsing target
+  if (pending) {
+    const s = toScreen(pending, r), p = (Math.sin(t * 8) + 1) / 2;
+    octx.strokeStyle = `rgba(255,181,71,${0.5 + p * 0.5})`; octx.lineWidth = 2; octx.setLineDash([10, 6]); octx.lineDashOffset = -t * 40;
+    octx.strokeRect(s.x, s.y, s.w, s.h); octx.setLineDash([]);
+    tag(octx, s.x, s.y + s.h + 44, 'ANALYSING', 'CROSS-REFERENCING…', '#ffb547');
+  }
+}
+requestAnimationFrame(render);
+
+/* ---------------- target list (left) */
+let targetSig = '';
+setInterval(() => {
+  const ul = $('targetList');
+  const items = tracks.filter(t => performance.now() - t.seen < 400).sort((a, b) => a.id - b.id).slice(0, 10);
+  const ai = aiTags.slice(0, Math.max(0, 10 - items.length));
+  const sig = items.map(t => t.id).join(',') + '|' + ai.map(a => a.label).join(',');
+  if (sig !== targetSig) {  // rebuild only when objects come or go (so rows don't flicker)
+    targetSig = sig; ul.innerHTML = '';
+    items.forEach(t => { const li = el('li'); li.dataset.id = t.id; li.append(el('span', 'id', 'T-' + String(t.id).padStart(2, '0')), el('span', 'nm', t.cls), el('span', 'sc')); ul.appendChild(li); });
+    ai.forEach(a => { const li = el('li', 'ai'); li.append(el('span', 'id', 'AI'), el('span', 'nm', a.label), el('span', 'sc', 'SCAN')); ul.appendChild(li); });
+  }
+  items.forEach(t => { const sc = ul.querySelector(`li[data-id="${t.id}"] .sc`); if (sc) sc.textContent = Math.round(t.score * 100) + '%'; });
+  $('tCount').textContent = items.length + aiTags.length;
+  $('tClock').textContent = new Date().toLocaleTimeString(undefined, { hour12: false });
+}, 250);
+
+/* ---------------- click to identify */
+function pointToFrame(ev) {
+  const r = imageRect(), x = (ev.clientX - r.x) / r.w, y = (ev.clientY - r.y) / r.h;
+  return (x < 0 || y < 0 || x > 1 || y > 1) ? null : { x, y };
+}
+function trackAt(p) {
+  let best = null;
+  for (const t of tracks) {
+    const b = t.box;
+    if (p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h && (!best || b.w * b.h < best.box.w * best.box.h)) best = t;
+  }
+  return best;
+}
+$('stage').addEventListener('mousemove', (ev) => { const p = pointToFrame(ev); hover = p ? trackAt(p) : null; });
+$('stage').addEventListener('click', async (ev) => {
+  const p = pointToFrame(ev); if (!p || !api() || pending) return;
+  const t = trackAt(p), r = imageRect();
+  let box, hint = '';
+  // A small/medium detected box = you clicked that object. A BIG box (a couch,
+  // a person, a table) often has smaller things on top of it - so for those,
+  // look at exactly where you clicked instead of the whole big thing.
+  const bigBox = t && t.box.w * t.box.h > 0.12;
+  if (t && !bigBox) { box = { ...t.box }; hint = t.cls; }
+  else {  // nothing (small) detected there: look at a square around the click
+    const side = 0.32, w = side * r.h / r.w;
+    box = { x: Math.max(0, p.x - w / 2), y: Math.max(0, p.y - side / 2), w: Math.min(w, 1), h: side };
+  }
+  pending = box; openInfo(); $('infoBody').innerHTML = '';
+  $('infoBody').append(el('div', 'kicker', 'TARGET ACQUIRED'), el('h2', null, hint ? hint.toUpperCase() : 'UNKNOWN OBJECT'), el('div', 'loading', 'ANALYSING…'));
+  try {
+    const info = JSON.parse(await api().identify(box, hint));
+    showInfo(info);
+    if (!info.error) addHistory(info);
+  } catch (e) { showInfo({ error: 'Something went wrong identifying that.' }); }
+  pending = null;
+});
+
+/* ---------------- info panel (right) */
+function openInfo() { $('info').classList.add('open'); }
+$('infoClose').onclick = () => $('info').classList.remove('open');
+function showInfo(info) {
+  const body = $('infoBody'); body.innerHTML = ''; openInfo();
+  if (info.error) { body.append(el('div', 'kicker', 'IDENTIFICATION FAILED'), el('p', 'err', info.error)); return; }
+  const conf = { high: 92, medium: 64, low: 34 }[info.confidence] || 50;
+  body.append(el('div', 'kicker', 'IDENTIFIED'), el('h2', null, info.name), el('div', 'cat', (info.category || '').toUpperCase()));
+  const c = el('div', 'conf'); const m = el('div', 'meter'); const bar = el('i'); bar.style.width = '0%'; m.appendChild(bar);
+  c.append(el('span', null, 'CONFIDENCE'), m, el('span', null, (info.confidence || '').toUpperCase())); body.appendChild(c);
+  requestAnimationFrame(() => bar.style.width = conf + '%');
+  if (info.summary) body.appendChild(el('p', null, info.summary));
+  if ((info.details || []).length) {
+    const tb = el('table');
+    info.details.forEach(d => { const tr = el('tr'); tr.append(el('th', null, d.label), el('td', null, d.value)); tb.appendChild(tr); });
+    body.appendChild(tb);
+  }
+  if (info.fact) { const f = el('div', 'fact'); f.append(el('b', null, 'DID YOU KNOW'), document.createTextNode(info.fact)); body.appendChild(f); }
+}
+const idHistory = [];
+function addHistory(info) {
+  idHistory.unshift(info); if (idHistory.length > 6) idHistory.pop();
+  const ul = $('historyList'); ul.innerHTML = '';
+  idHistory.forEach(h => { const li = el('li', null, '› ' + h.name); li.onclick = () => showInfo(h); ul.appendChild(li); });
+}
+
+/* ---------------- toolbar */
+$('labelsBtn').onclick = () => { showLabels = !showLabels; $('labelsBtn').textContent = showLabels ? '▣ LABELS ON' : '□ LABELS OFF'; $('labelsBtn').classList.toggle('off', !showLabels); };
+$('closeBtn').onclick = () => api()?.close();
+$('scanBtn').onclick = async () => {
+  if (!api()) return; const b = $('scanBtn'); b.disabled = true; b.textContent = '◎ SCANNING…';
+  try {
+    const res = JSON.parse(await api().deep_scan());
+    if (res.error) { showInfo({ error: res.error }); }
+    else { aiTags = res.objects || []; setTimeout(() => { aiTags = []; }, 20000); }  // AI tags fade after 20s
+  } finally { b.disabled = false; b.textContent = '◎ DEEP SCAN'; }
+};
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $('info').classList.remove('open'); });
+
+/* ---------------- start / stop (called by AURA) */
+window.visionStart = function () {
+  running = true; tracks = []; aiTags = [];
+  status('INITIALISING OPTICS', 'Connecting to camera…');
+  const waitFirstFrame = setInterval(() => {
+    if (!running) return clearInterval(waitFirstFrame);
+    if (feed.naturalWidth) {
+      clearInterval(waitFirstFrame);
+      status(model ? null : 'LOADING RECOGNITION MODEL', model ? '' : 'Loading the recognition model…');
+    }
+  }, 100);
+  feed.onerror = () => { if (running) status('CAMERA OFFLINE', 'No picture from the camera. Close and reopen Vision mode, or check no other app is using it.', false); };
+  feed.src = '/camera/stream.mjpg?t=' + Date.now();
+  loadModel().then(() => { if (running && feed.naturalWidth && model) status(null); });
+  detectLoop();
+};
+window.visionStop = function () { running = false; feed.src = ''; tracks = []; aiTags = []; pending = null; $('info').classList.remove('open'); };
+
+// If AURA showed this window before the page finished loading, catch up.
+async function init() {
+  loadModel();
+  try { const s = JSON.parse(await api().start_camera_status()); if (s.on) window.visionStart(); else status('CAMERA OFF', 'Say "AURA, open the camera" to start Vision mode.', false); }
+  catch (e) { status('CAMERA OFF', 'Say "AURA, open the camera" to start Vision mode.', false); }
+}
+if (api()) init(); else window.addEventListener('pywebviewready', init);
+</script>
+</body>
+</html>

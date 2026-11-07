@@ -1,0 +1,115 @@
+/* ==========================================================================================================
+   AURA UI SKINS - shared layer for the five alternative interfaces (LEDGER, HMI, SWISS, CONSOLE, HAVEN).
+   Everything here is scoped to :root[data-skin] (set by ui/skins.js); with no skin chosen - the original
+   AURA HUD - none of this applies. It neutralises the HUD's sci-fi decoration (glows, scanlines, clipped
+   corners, cyan tints) and maps every surface to the skin's tokens; each skin file then adds its identity.
+   Extra tokens a skin sets: --on-accent (text on the accent colour), --radius, --shadow, --rule, --surface2.
+   ========================================================================================================== */
+:root[data-skin] { --glow: none; --cut: 0px; --radius: 0px; --shadow: none; --on-accent: #fff; --surface2: var(--panel-solid); --rule: var(--line); }
+
+/* ---------- decoration off ---------- */
+:root[data-skin] .bg-layer { background: var(--bg); }
+:root[data-skin] .bg-scan, :root[data-skin] .topbar::after, :root[data-skin] .tabbar::before { display: none; }
+:root[data-skin] *, :root[data-skin] *::before, :root[data-skin] *::after { text-shadow: none !important; }
+:root[data-skin] body { background: var(--bg); }
+
+/* ---------- shell ---------- */
+:root[data-skin] .topbar, :root[data-skin] .page-head { background: var(--surface2); border-bottom: 1px solid var(--rule); }
+:root[data-skin] .tabbar, :root[data-skin] #app > .tabbar { background: var(--surface2); border-color: var(--rule); }
+:root[data-skin] .brand .name { color: var(--text); }
+:root[data-skin] .pill { background: transparent; color: var(--text-dim); border-color: var(--rule); border-radius: var(--radius); }
+:root[data-skin] .pill .dot, :root[data-skin] .mod.on i { box-shadow: none; }
+:root[data-skin] .tab.active::after { box-shadow: none; }
+:root[data-skin] .page { background: var(--bg); }
+:root[data-skin] .page-head h1 { color: var(--text); }
+:root[data-skin] .back { color: var(--text); }
+:root[data-skin] .sheet { clip-path: none; border-radius: var(--radius) var(--radius) 0 0; background: var(--panel-solid); box-shadow: var(--shadow); }
+:root[data-skin] .sheet h2 { color: var(--text); }
+:root[data-skin] .toast, :root[data-skin] .toast.reminder, :root[data-skin] .toast.focus, :root[data-skin] .toast.error { box-shadow: var(--shadow); border-radius: var(--radius); background: var(--panel-solid); }
+:root[data-skin] .toast .tt { color: var(--text); }
+:root[data-skin] .boot-logo { color: var(--text); }
+:root[data-skin] .boot-bar { background: var(--line); } :root[data-skin] .boot-bar i { box-shadow: none; }
+
+/* ---------- panels & controls ---------- */
+:root[data-skin] .panel { clip-path: none; border-radius: var(--radius); box-shadow: var(--shadow); }
+:root[data-skin] .panel::before, :root[data-skin] .panel::after { display: none; }
+:root[data-skin] .panel.tap:active { background: var(--cyan-faint); }
+:root[data-skin] .ph .title::before { box-shadow: none; }
+:root[data-skin] .btn, :root[data-skin] .send, :root[data-skin] .tool, :root[data-skin] .cmd-box { clip-path: none; border-radius: var(--radius); }
+:root[data-skin] .btn { background: transparent; color: var(--text); border-color: var(--line-strong); }
+:root[data-skin] .btn:active { background: var(--cyan-faint); }
+:root[data-skin] .btn.solid, :root[data-skin] .send { background: var(--cyan); border-color: var(--cyan); color: var(--on-accent); }
+:root[data-skin] .btn.danger { color: var(--red); border-color: var(--red); background: transparent; }
+:root[data-skin] .chip { background: transparent; border-color: var(--line); border-radius: var(--radius); color: var(--text); }
+:root[data-skin] .chip:active { background: var(--cyan-faint); color: var(--text); border-color: var(--cyan); }
+:root[data-skin] .input, :root[data-skin] .textarea, :root[data-skin] select.input { background: var(--panel-solid); border-radius: var(--radius); color: var(--text); }
+:root[data-skin] .input:focus, :root[data-skin] .textarea:focus { box-shadow: 0 0 0 2px var(--cyan-faint); border-color: var(--cyan); }
+:root[data-skin] .list li, :root[data-skin] .setting { border-bottom: 1px solid var(--rule); }
+:root[data-skin] .check { border-color: var(--line-strong); border-radius: calc(var(--radius) / 2); }
+:root[data-skin] .check:active { background: var(--cyan-faint); }
+:root[data-skin] .kind { border-radius: var(--radius); color: var(--text-dim); }
+:root[data-skin] .seg { background: var(--bg); }
+:root[data-skin] .seg button { border-radius: 0; }
+:root[data-skin] .seg button.active { box-shadow: none; background: var(--cyan); color: var(--on-accent); border-color: var(--cyan); }
+:root[data-skin] .stat b, :root[data-skin] .callout b, :root[data-skin] .gauge .val, :root[data-skin] .kv b,
+:root[data-skin] .net-row .big, :root[data-skin] .focus .ftime { color: var(--text); }
+:root[data-skin] .callout { background: var(--panel-solid); border-radius: var(--radius); }
+:root[data-skin] .bar { background: var(--line); border-radius: var(--radius); }
+:root[data-skin] .bar i { background: var(--cyan); box-shadow: none; }
+:root[data-skin] .bar.warn i { background: var(--amber); }
+:root[data-skin] .bars .b i { background: var(--cyan); box-shadow: none; }
+:root[data-skin] .bars .b.v i { background: var(--violet); }
+:root[data-skin] .toggle { background: var(--line); border-color: var(--line-strong); }
+:root[data-skin] .toggle[aria-checked="true"] { background: var(--cyan); border-color: var(--cyan); }
+:root[data-skin] .toggle[aria-checked="true"]::after { background: var(--on-accent); box-shadow: none; }
+:root[data-skin] .tool { background: var(--panel); border-radius: var(--radius); box-shadow: var(--shadow); }
+:root[data-skin] .tool svg { color: var(--text); }
+:root[data-skin] .tool:active { background: var(--cyan-faint); }
+:root[data-skin] .mini { border-radius: var(--radius); }
+:root[data-skin] .spinner { border-color: var(--line); border-top-color: var(--cyan); }
+:root[data-skin] .boxes .box { box-shadow: none; }
+:root[data-skin] .boxes .box span { color: var(--on-accent); }
+:root[data-skin] .answer h3 { color: var(--text); }
+
+/* ---------- the command bar & conversation ---------- */
+:root[data-skin] .cmd-box { background: var(--panel-solid); box-shadow: none; }
+:root[data-skin] .cmd-box:focus-within { box-shadow: 0 0 0 2px var(--cyan-faint); }
+:root[data-skin] .cmd-box .prompt { animation: none; }
+:root[data-skin] .suggest { border-radius: var(--radius); box-shadow: var(--shadow); }
+:root[data-skin] .suggest li:active { background: var(--cyan-faint); color: var(--text); }
+:root[data-skin] .t-you { color: var(--text); } :root[data-skin] .t-you .tag { color: var(--text-dim); }
+:root[data-skin] .t-aura { border-left-color: var(--cyan); }
+:root[data-skin] .comms-input { background: var(--bg); border-top-color: var(--rule); }
+
+/* ---------- the reactor becomes a plain status readout (each skin styles it) ---------- */
+:root[data-skin] .reactor svg { display: none; }
+:root[data-skin] .reactor { width: 100%; max-width: 460px; aspect-ratio: auto; min-height: 150px; }
+:root[data-skin] .core-text { position: relative; inset: auto; min-height: 150px; }
+:root[data-skin] .core-text .l2 { color: var(--text); }
+:root[data-skin] .core-text .l3 { color: var(--text-dim); }
+:root[data-skin] .hud-cat { opacity: .9; }
+
+/* ---------- NEXUS / tool pages: calm surfaces (camera and 3D views stay dark by design) ---------- */
+:root[data-skin] .nx-page { background: var(--bg); }
+:root[data-skin] .nx-card, :root[data-skin] .nx-panel, :root[data-skin] .ow-card { clip-path: none; border-radius: var(--radius); background: var(--panel); border-color: var(--line); box-shadow: var(--shadow); }
+:root[data-skin] .nx-chip, :root[data-skin] .ow-chip, :root[data-skin] .ow-pw { border-radius: var(--radius); }
+
+/* ---------- iPad ---------- */
+:root[data-skin] .ip-strip, :root[data-skin] .ip-rail { background: var(--surface2); border-color: var(--rule); box-shadow: none; }
+:root[data-skin] .ip-deck-btn, :root[data-skin] .ip-sys, :root[data-skin] .ip-quick-btn, :root[data-skin] .ip-say-btn, :root[data-skin] .ip-chip { clip-path: none; border-radius: var(--radius); }
+
+@media (prefers-reduced-motion: reduce) { :root[data-skin] * { animation: none !important; } }
+
+/* ---------- drawings with fixed HUD colours (SVG rings, gauges, sparklines, the cat) ---------- */
+:root[data-skin] svg [stroke="#3ad6ff"], :root[data-skin] svg [stroke="#9ef3ff"] { stroke: var(--cyan); }
+:root[data-skin] svg [stroke="#a78bfa"] { stroke: var(--violet); }
+:root[data-skin] svg [stroke^="rgba(58,214,255"], :root[data-skin] svg [stroke^="rgba(167,139,250"] { stroke: var(--line); }
+:root[data-skin] svg [fill="#3ad6ff"], :root[data-skin] svg [fill="#9ef3ff"] { fill: var(--cyan); }
+:root[data-skin] svg [fill^="rgba(58,214,255"] { fill: var(--cyan-faint); }
+:root[data-skin] svg [style*="drop-shadow"] { filter: none !important; }
+:root[data-skin] canvas.spark { filter: grayscale(1) contrast(1.25); }
+:root[data-skin] .hud-cat { filter: grayscale(1) contrast(1.05); }
+/* iPad rail: the talk button and status lights */
+:root[data-skin] .ip-talk { background: var(--cyan); color: var(--on-accent); border-color: var(--cyan); box-shadow: none; }
+:root[data-skin] .ip-talk.on { background: var(--green); border-color: var(--green); }
+:root[data-skin] .ip-light i.on { box-shadow: none; }

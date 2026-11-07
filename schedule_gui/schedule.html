@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AURA</title>
+<style>
+  :root {
+    --cyan: #3ad6ff;
+    --cyan-dim: #1c6e85;
+    --bg: #05070a;
+    --panel: rgba(10, 22, 30, 0.85);
+    --text: #d9f4ff;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    background: var(--bg);
+    font-family: 'Consolas', 'Segoe UI', monospace;
+    color: var(--cyan);
+  }
+  body {
+    display: flex; flex-direction: column; padding: 22px;
+    background:
+      radial-gradient(circle at 50% 22%, rgba(58,214,255,0.10), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(58,214,255,0.02) 0px, rgba(58,214,255,0.02) 1px, transparent 1px, transparent 3px),
+      var(--bg);
+  }
+
+  .ring-wrap { position: relative; width: 130px; height: 130px; margin: 0 auto 16px auto; }
+  .ring {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid var(--cyan-dim);
+    border-top-color: var(--cyan);
+    box-shadow: 0 0 16px rgba(58,214,255,0.25);
+    animation: spin 7s linear infinite;
+  }
+  .ring.inner {
+    inset: 15px;
+    border-top-color: transparent;
+    border-right-color: var(--cyan);
+    animation: spin 4.5s linear infinite reverse;
+  }
+  .ring.outer-dash {
+    inset: -8px;
+    border: 1px dashed var(--cyan-dim);
+    opacity: 0.5;
+    animation: spin 22s linear infinite;
+  }
+  .ring-center {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; letter-spacing: 3px; color: var(--cyan);
+    text-shadow: 0 0 10px var(--cyan);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+  h1 {
+    text-align: center; font-size: 18px; font-weight: 400; letter-spacing: 1px;
+    margin: 0 0 2px 0; text-shadow: 0 0 12px rgba(58,214,255,0.7);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  .subtitle {
+    text-align: center; font-size: 10px; color: var(--cyan-dim); letter-spacing: 3px;
+    text-transform: uppercase; margin-bottom: 18px;
+  }
+
+  .panel {
+    background: var(--panel); border: 1px solid var(--cyan-dim);
+    border-radius: 4px; padding: 12px 14px; margin-bottom: 10px;
+    box-shadow: 0 0 22px rgba(58,214,255,0.05) inset, 0 0 8px rgba(58,214,255,0.06);
+    position: relative;
+  }
+  .panel::before {
+    content: ""; position: absolute; top: 0; left: 0; width: 18px; height: 2px;
+    background: var(--cyan); box-shadow: 0 0 6px var(--cyan);
+  }
+  .panel-label {
+    font-size: 10px; letter-spacing: 2px; color: var(--cyan-dim);
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .panel-item {
+    font-size: 13px; color: var(--text); padding: 3px 0;
+  }
+  .panel-item .dot { color: var(--cyan); margin-right: 6px; text-shadow: 0 0 6px var(--cyan); }
+  .empty { color: #3a5866; font-size: 12px; font-style: italic; }
+  .weather-line { font-size: 14px; color: var(--text); text-align: center; }
+
+  #status {
+    text-align: center; font-size: 10px; color: var(--cyan-dim);
+    margin-top: auto; padding-top: 10px; letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+  <div class="ring-wrap">
+    <div class="ring outer-dash"></div>
+    <div class="ring"></div>
+    <div class="ring inner"></div>
+    <div class="ring-center" id="timeLabel">--</div>
+  </div>
+
+  <h1 id="greeting">AURA STANDING BY</h1>
+  <div class="subtitle" id="dateLine">awaiting briefing</div>
+
+  <div class="panel">
+    <div class="panel-label">Schedule</div>
+    <div id="scheduleList"><div class="empty">No data yet</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label">Tasks</div>
+    <div id="tasksList"><div class="empty">No data yet</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label">Weather</div>
+    <div class="weather-line" id="weatherLine">-</div>
+  </div>
+
+  <div id="status">Waiting for briefing...</div>
+
+<script>
+function renderList(containerId, items) {
+  const el = document.getElementById(containerId);
+  if (!items || items.length === 0) {
+    el.innerHTML = '<div class="empty">Nothing here</div>';
+    return;
+  }
+  el.innerHTML = items.map(i => `<div class="panel-item"><span class="dot">&#9670;</span>${i}</div>`).join('');
+}
+
+window.updateBriefing = function (data) {
+  const label = (data.time_label || '').toUpperCase();
+  document.getElementById('greeting').textContent = data.name
+    ? `GOOD ${label}, ${data.name.toUpperCase()}`
+    : 'AURA BRIEFING';
+  document.getElementById('timeLabel').textContent = label;
+  document.getElementById('dateLine').textContent =
+    new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+  renderList('scheduleList', data.schedule);
+  renderList('tasksList', data.tasks);
+  document.getElementById('weatherLine').textContent = data.weather || 'Unavailable';
+  document.getElementById('status').textContent = 'Updated ' + new Date().toLocaleTimeString();
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+/* LEDGER - editorial. Reads like a well-set report: serif display type, ruled sections instead of boxes, one ink
+   accent, generous margins. For offices, law, finance, healthcare administration. Themes: paper · linen · night. */
+:root[data-skin="ledger"] {
+  --bg: #f3eee4; --bg2: #f3eee4; --panel: transparent; --panel-solid: #fbf8f1; --surface2: #f3eee4;
+  --line: rgba(33, 29, 24, .14); --line-strong: rgba(33, 29, 24, .42); --rule: rgba(33, 29, 24, .16);
+  --cyan: #8a2e1d; --cyan-bright: #6e2212; --cyan-dim: #c79a8f; --cyan-faint: rgba(138, 46, 29, .07); --on-accent: #fbf8f1;
+  --amber: #9a6a00; --red: #a3261b; --green: #3f6b3a; --violet: #5b4a7a;
+  --text: #211d18; --text-dim: #6b6358; --text-faint: #9c9386;
+  --f-head: 'Newsreader', Georgia, 'Times New Roman', serif; --f-ui: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --f-mono: 'IBM Plex Mono', Consolas, monospace; --radius: 0px; color-scheme: light;
+}
+:root[data-skin="ledger"][data-skin-theme="linen"] {
+  --bg: #f4f5f2; --bg2: #f4f5f2; --panel-solid: #ffffff; --surface2: #f4f5f2;
+  --line: rgba(20, 30, 45, .13); --line-strong: rgba(20, 30, 45, .4); --rule: rgba(20, 30, 45, .15);
+  --cyan: #1d3a5f; --cyan-bright: #142a46; --cyan-dim: #93a6bf; --cyan-faint: rgba(29, 58, 95, .07); --on-accent: #fff;
+  --text: #141c26; --text-dim: #5a6472; --text-faint: #929aa5;
+}
+:root[data-skin="ledger"][data-skin-theme="night"] {
+  --bg: #1a1916; --bg2: #1a1916; --panel-solid: #22211d; --surface2: #1a1916;
+  --line: rgba(236, 230, 216, .12); --line-strong: rgba(236, 230, 216, .38); --rule: rgba(236, 230, 216, .13);
+  --cyan: #c9a35b; --cyan-bright: #ddbb78; --cyan-dim: #6e5c39; --cyan-faint: rgba(201, 163, 91, .1); --on-accent: #1a1916;
+  --amber: #d9a441; --red: #e0705f; --green: #8fb27a; --violet: #a99bc9;
+  --text: #ece6d8; --text-dim: #a59d8e; --text-faint: #6f685d; color-scheme: dark;
+}
+
+/* typography: sentence case, no tracking, serif display */
+:root[data-skin="ledger"] .brand .name { font-family: var(--f-head); font-weight: 600; font-size: 1.35rem; letter-spacing: 0; font-style: italic; }
+:root[data-skin="ledger"] .brand svg { display: none; }
+:root[data-skin="ledger"] .pill { font-family: var(--f-ui); letter-spacing: .02em; font-size: .72rem; text-transform: none; border: 0; padding: 4px 0; }
+:root[data-skin="ledger"] .ph .title, :root[data-skin="ledger"] .section-label, :root[data-skin="ledger"] .field label,
+:root[data-skin="ledger"] .page-head h1, :root[data-skin="ledger"] .sheet h2, :root[data-skin="ledger"] .toast .tt {
+  font-family: var(--f-head); font-weight: 600; letter-spacing: 0; text-transform: none; font-variant: small-caps; font-size: 1.02rem; color: var(--text); }
+:root[data-skin="ledger"] .page-head h1 { font-variant: normal; font-size: 1.25rem; font-style: italic; }
+:root[data-skin="ledger"] .ph .title::before { display: none; }
+:root[data-skin="ledger"] .ph .code { font-family: var(--f-ui); font-size: .72rem; color: var(--text-faint); }
+:root[data-skin="ledger"] .section-label { margin: 26px 0 6px; font-size: 1.1rem; }
+
+/* sections are rules, not boxes */
+:root[data-skin="ledger"] .panel { background: transparent; border: 0; border-top: 2px solid var(--text); padding: 12px 2px 14px; margin-bottom: 18px; }
+:root[data-skin="ledger"] .panel.tap:active { background: var(--cyan-faint); }
+:root[data-skin="ledger"] .screen { padding-top: 20px; }
+
+/* buttons: thin ink outlines, small caps */
+:root[data-skin="ledger"] .btn, :root[data-skin="ledger"] .tab, :root[data-skin="ledger"] .seg button, :root[data-skin="ledger"] .tool, :root[data-skin="ledger"] .mini,
+:root[data-skin="ledger"] .banner button {
+  font-family: var(--f-ui); letter-spacing: .03em; font-size: .82rem; font-weight: 500; text-transform: none; }
+:root[data-skin="ledger"] .btn { border: 1px solid var(--text); color: var(--text); }
+:root[data-skin="ledger"] .btn.solid { background: var(--text); border-color: var(--text); color: var(--bg); }
+:root[data-skin="ledger"] .chip { border: 0; border-bottom: 1px solid var(--line-strong); padding: 0 4px; font-weight: 500; }
+
+/* tab bar: text links, ink underline */
+:root[data-skin="ledger"] .tabbar { border-top: 1px solid var(--text); }
+:root[data-skin="ledger"] .tab { color: var(--text-dim); font-size: .74rem; }
+:root[data-skin="ledger"] .tab.active { color: var(--text); }
+:root[data-skin="ledger"] .tab.active::after { background: var(--cyan); height: 3px; left: 30%; right: 30%; }
+:root[data-skin="ledger"] .tab svg { stroke-width: 1.4; }
+
+/* the status readout: a headline */
+:root[data-skin="ledger"] .reactor { min-height: 0; border-bottom: 1px solid var(--rule); }
+:root[data-skin="ledger"] .core-text { align-items: flex-start; text-align: left; padding: 6px 2px 16px; min-height: 0; }
+:root[data-skin="ledger"] .core-text .l1 { font-family: var(--f-ui); letter-spacing: .08em; font-size: .7rem; color: var(--text-faint); text-transform: uppercase; }
+:root[data-skin="ledger"] .core-text .l2 { font-family: var(--f-head); font-weight: 500; font-size: 2.8rem; letter-spacing: -.01em; text-transform: lowercase; margin: 2px 0; }
+:root[data-skin="ledger"] .core-text .l2::first-letter { text-transform: uppercase; }
+:root[data-skin="ledger"] .core-text .l3 { font-family: var(--f-head); font-style: italic; font-size: 1rem; letter-spacing: 0; text-transform: lowercase; }
+:root[data-skin="ledger"] .callout { background: transparent; border: 0; border-left: 1px solid var(--rule); font-family: var(--f-ui); letter-spacing: .04em; font-size: .68rem; text-transform: uppercase; }
+:root[data-skin="ledger"] .callout b, :root[data-skin="ledger"] .stat b { font-family: var(--f-head); font-weight: 500; font-size: 1.6rem; letter-spacing: 0; }
+:root[data-skin="ledger"] .stat { font-family: var(--f-ui); }
+
+/* conversation: like a transcript in print */
+:root[data-skin="ledger"] .t-line .tag { font-family: var(--f-ui); font-variant: small-caps; letter-spacing: .04em; font-size: .8rem; }
+:root[data-skin="ledger"] .t-aura { border-left: 0; padding-left: 0; font-family: var(--f-head); font-size: 1.08rem; }
+:root[data-skin="ledger"] .t-you { font-family: var(--f-ui); color: var(--text-dim); }
+:root[data-skin="ledger"] .cmd-box { border: 0; border-bottom: 2px solid var(--text); background: transparent; }
+:root[data-skin="ledger"] .cmd-box .prompt { color: var(--text-faint); font-family: var(--f-head); }
+:root[data-skin="ledger"] .input, :root[data-skin="ledger"] .textarea { font-family: var(--f-ui); border: 0; border-bottom: 1px solid var(--line-strong); background: transparent; }
+:root[data-skin="ledger"] .list li { border-bottom: 1px solid var(--rule); }
+:root[data-skin="ledger"] .tool { background: transparent; border: 0; border-top: 1px solid var(--text); box-shadow: none; }
+:root[data-skin="ledger"] .nx-card, :root[data-skin="ledger"] .nx-panel { background: transparent; border: 0; border-top: 2px solid var(--text); }
+:root[data-skin="ledger"] .toast { border: 0; border-top: 3px solid var(--cyan); }
+:root[data-skin="ledger"] .toast.reminder { border-top-color: var(--amber); } :root[data-skin="ledger"] .toast.error { border-top-color: var(--red); }
+@media (min-width: 768px) { :root[data-skin="ledger"] #app > .tabbar { border-top: 0; border-right: 1px solid var(--text); background: var(--bg); } }
+/* small caps from the app's capitalised labels */
+:root[data-skin="ledger"] .ph .title, :root[data-skin="ledger"] .section-label, :root[data-skin="ledger"] .sheet h2 { text-transform: lowercase; font-variant: small-caps; font-size: 1.12rem; }
+:root[data-skin="ledger"] .tab span { display: inline-block; text-transform: lowercase; } :root[data-skin="ledger"] .tab span::first-letter { text-transform: uppercase; }
+:root[data-skin="ledger"] .callout, :root[data-skin="ledger"] .stat { text-transform: lowercase; font-variant: small-caps; font-size: .86rem; letter-spacing: .02em; }
+:root[data-skin="ledger"] .hud-cat { filter: grayscale(1) sepia(.35); }

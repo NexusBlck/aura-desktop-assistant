@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AURA - CDC WONDER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #02050a; --panel: rgba(6, 16, 24, 0.85); --line: rgba(58, 214, 255, 0.22); --line-strong: rgba(58, 214, 255, 0.55);
+    --cyan: #3ad6ff; --cyan-bright: #9ef3ff; --cyan-dim: #1b6a80; --amber: #ffb547; --red: #ff5a6a; --green: #4ef0a3;
+    --text: #d6f6ff; --text-dim: #7fa6b5; --text-faint: #3c6273;
+    --f-head: 'Orbitron', 'Segoe UI', sans-serif; --f-ui: 'Rajdhani', 'Segoe UI', sans-serif; --f-mono: 'Share Tech Mono', 'Consolas', monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--f-ui); font-size: 15px; }
+  body { background: radial-gradient(ellipse at 50% 0%, rgba(58,214,255,0.08), transparent 60%), repeating-linear-gradient(0deg, rgba(58,214,255,0.02) 0 1px, transparent 1px 3px), var(--bg); }
+  button, input, select { font-family: var(--f-ui); }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 22px 22px 40px; }
+  header { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 12px; margin-bottom: 18px; }
+  header .t { font-family: var(--f-head); font-weight: 900; font-size: 20px; letter-spacing: 6px; color: var(--cyan-bright); text-shadow: 0 0 14px rgba(58,214,255,.7); }
+  header .s { font-family: var(--f-mono); font-size: 12px; letter-spacing: 2px; color: var(--text-dim); }
+  .panel { background: var(--panel); border: 1px solid var(--line); padding: 16px 18px; margin-bottom: 14px; position: relative;
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
+  .panel::before { content: ""; position: absolute; top: -1px; left: -1px; width: 14px; height: 14px; border-top: 2px solid var(--cyan); border-left: 2px solid var(--cyan); }
+  h2 { font-family: var(--f-head); font-size: 12px; letter-spacing: 3px; color: var(--cyan); margin: 0 0 12px; display: flex; gap: 10px; align-items: center; }
+  h2 .n { font-family: var(--f-mono); color: var(--bg); background: var(--cyan); padding: 1px 7px; }
+  .hint { font-family: var(--f-mono); font-size: 12px; color: var(--text-dim); margin: 4px 0 10px; line-height: 1.5; }
+  input[type=text] { background: rgba(3,10,16,0.9); border: 1px solid var(--line); color: var(--text); font-family: var(--f-mono); font-size: 14px; padding: 8px 10px; outline: 0; width: 100%; }
+  input[type=text]:focus { border-color: var(--cyan); }
+  .cond { display: grid; grid-template-columns: 1fr 1.3fr 34px; gap: 8px; margin-bottom: 8px; align-items: start; }
+  .cond .msg { grid-column: 2 / 3; font-family: var(--f-mono); font-size: 11px; margin-top: -4px; }
+  .cond .msg.bad { color: var(--red); } .cond .msg.ok { color: var(--green); } .cond .msg.sug { color: var(--amber); }
+  .tagAB { font-family: var(--f-head); color: var(--bg); background: var(--cyan); height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 900; }
+  .andsep { font-family: var(--f-head); letter-spacing: 4px; color: var(--amber); font-size: 12px; margin: 2px 0 8px; padding-left: 4px; }
+  .x { background: none; border: 1px solid var(--line); color: var(--text-dim); height: 36px; cursor: pointer; }
+  .x:hover { color: var(--red); border-color: var(--red); }
+  .btn { border: 1px solid var(--line-strong); background: rgba(58,214,255,0.06); color: var(--cyan-bright); font-family: var(--f-head); font-size: 11px;
+    letter-spacing: 2px; padding: 9px 16px; cursor: pointer; }
+  .btn:hover { background: rgba(58,214,255,0.15); box-shadow: 0 0 14px rgba(58,214,255,0.3); }
+  .btn.primary { background: var(--cyan); color: #02121a; font-weight: 700; }
+  .btn.primary:hover { background: var(--cyan-bright); }
+  .btn.small { font-size: 10px; padding: 5px 10px; letter-spacing: 1px; }
+  .btn:disabled { opacity: .4; cursor: default; }
+  .ages { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  .age { border: 1px solid var(--line); padding: 7px 6px; text-align: center; cursor: pointer; user-select: none; font-weight: 600; font-size: 14px; color: var(--text-dim); }
+  .age.on { border-color: var(--cyan); color: var(--cyan-bright); background: rgba(58,214,255,0.12); box-shadow: inset 0 0 10px rgba(58,214,255,0.15); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .radio { display: flex; gap: 8px; }
+  .radio label { border: 1px solid var(--line); padding: 8px 12px; cursor: pointer; font-weight: 600; color: var(--text-dim); }
+  .radio input { display: none; }
+  .radio input:checked + span { color: var(--cyan-bright); }
+  .radio label:has(input:checked) { border-color: var(--cyan); background: rgba(58,214,255,0.1); }
+  .terms { border: 1px solid rgba(255,181,71,0.45); background: rgba(255,181,71,0.05); padding: 12px 14px; font-size: 14px; line-height: 1.5; }
+  .terms ul { margin: 6px 0 8px 18px; padding: 0; }
+  .terms label { display: flex; gap: 8px; align-items: center; font-weight: 700; color: var(--amber); cursor: pointer; }
+  .summary { font-family: var(--f-mono); font-size: 13px; color: var(--text-dim); margin: 10px 0; }
+  #err { color: var(--red); font-weight: 600; margin: 8px 0; min-height: 20px; }
+  .bar { height: 8px; background: rgba(58,214,255,0.1); margin: 10px 0; }
+  .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--cyan-dim), var(--cyan)); box-shadow: 0 0 10px var(--cyan); transition: width .6s; }
+  .big { font-family: var(--f-head); font-size: 22px; color: var(--cyan-bright); }
+  .mono { font-family: var(--f-mono); font-size: 13px; color: var(--text-dim); }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px dashed rgba(58,214,255,0.14); font-size: 14px; vertical-align: top; }
+  th { font-family: var(--f-mono); font-size: 11px; letter-spacing: 1px; color: var(--text-dim); font-weight: normal; }
+  .ok { color: var(--green); } .wait { color: var(--amber); } .bad { color: var(--red); }
+  ol.steps { margin: 6px 0 0 18px; padding: 0; line-height: 1.6; }
+  ol.steps b { color: var(--cyan-bright); }
+  code { font-family: var(--f-mono); color: var(--amber); background: rgba(255,181,71,0.08); padding: 1px 5px; }
+  .copy { cursor: pointer; border: 1px solid var(--line); background: none; color: var(--cyan); font-family: var(--f-mono); font-size: 11px; padding: 1px 6px; margin-left: 4px; }
+  .outputs li { margin: 6px 0; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="t">CDC WONDER</div><div class="s">MORTALITY DATA EXTRACTOR · MULTIPLE CAUSE OF DEATH 1999–2024</div></header>
+
+  <!-- ===================== SETUP ===================== -->
+  <div id="setup">
+    <section class="panel">
+      <h2><span class="n">1</span> CONDITIONS &amp; ICD-10 CODES</h2>
+      <div class="hint">Deaths where <b>both</b> conditions appear on the same death certificate (e.g. heart failure <b>with</b> arthrosis) — one combined dataset.
+        Leave B empty to study one condition alone. Codes can be single (<code>I50</code>), detailed (<code>I50.9</code>) or ranges (<code>M15-M19</code>).</div>
+      <div class="cond" id="condA">
+        <input type="text" placeholder="Condition A, e.g. Heart failure">
+        <input type="text" placeholder="ICD-10 codes for A, e.g. I50">
+        <span class="tagAB">A</span>
+        <div class="msg"></div>
+      </div>
+      <div class="andsep">AND</div>
+      <div class="cond" id="condB">
+        <input type="text" placeholder="Condition B (optional), e.g. Arthrosis">
+        <input type="text" placeholder="ICD-10 codes for B, e.g. M15-M19">
+        <span class="tagAB">B</span>
+        <div class="msg"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2><span class="n">2</span> AGE GROUPS <span class="mono" style="letter-spacing:0">(CDC WONDER ten-year groups)</span></h2>
+      <div class="row" style="margin-bottom:10px">
+        <button class="btn small" data-preset="all">ALL AGES</button>
+        <button class="btn small" data-preset="25">ADULTS 25+</button>
+        <button class="btn small" data-preset="45">45+</button>
+        <button class="btn small" data-preset="65">65+</button>
+      </div>
+      <div class="ages" id="ages"></div>
+      <div class="hint" id="ageNote"></div>
+    </section>
+
+    <section class="panel">
+      <h2><span class="n">3</span> OPTIONS</h2>
+      <div class="row" style="justify-content:space-between">
+        <div class="radio">
+          <label><input type="radio" name="cause" value="multiple" checked><span id="causeMulti">Both anywhere on the certificate</span></label>
+          <label><input type="radio" name="cause" value="underlying"><span id="causeUnder">A as the underlying cause, B contributing</span></label>
+        </div>
+      </div>
+      <div class="hint" style="margin-top:10px">
+        Pulled automatically for every condition, each broken down by year: <span id="apiList"></span>.<br>
+        From the CDC WONDER website (CDC doesn't allow these automatically — AURA gives you a checklist and picks up the files):
+        <span id="webList"></span>.<br>
+        Rates: crude + age-adjusted (2000 U.S. standard) with 95% CIs and standard errors. Years: 1999–2020 + 2021–2024, merged with no repeats.
+      </div>
+    </section>
+
+    <section class="panel" id="termsPanel">
+      <h2><span class="n">4</span> CDC DATA USE RESTRICTIONS</h2>
+      <div class="terms">
+        CDC requires you to agree before any data is requested. By using these data you will:
+        <ul>
+          <li>Use them for health statistical reporting and analysis only.</li>
+          <li>Not present or publish death counts of 9 or fewer, or rates based on them.</li>
+          <li>Make no attempt to learn the identity of any person or establishment in the data, and report any accidental discovery to NCHS.</li>
+        </ul>
+        Violations can lead to loss of access and legal penalties.
+        <label style="margin-top:8px"><input type="checkbox" id="terms"> I agree to CDC WONDER's data use restrictions</label>
+      </div>
+    </section>
+
+    <div class="summary" id="summary"></div>
+    <div id="err"></div>
+    <button class="btn primary" id="startBtn">▶ START EXTRACTION</button>
+  </div>
+
+  <!-- ===================== RUNNING ===================== -->
+  <div id="running" class="hidden">
+    <section class="panel">
+      <h2><span class="n">A</span> AUTOMATIC PART · CDC WONDER API</h2>
+      <div class="row" style="justify-content:space-between">
+        <div class="big" id="progText">0 / 0 queries</div>
+        <div class="mono" id="eta"></div>
+      </div>
+      <div class="bar"><i id="progBar" style="width:0%"></i></div>
+      <div class="mono" id="now"></div>
+      <div class="mono bad" id="fails"></div>
+      <div class="hint">CDC asks automated tools to send one query every 2 minutes, so this runs in the background — you can close this window and keep using AURA. You'll hear when it's done.</div>
+      <div class="row"><button class="btn small" id="stopBtn">■ STOP</button></div>
+    </section>
+
+    <section class="panel">
+      <h2><span class="n">B</span> YOUR PART · LOCATION DATA FROM THE WEBSITE</h2>
+      <div class="hint">Do this while the automatic part runs. Each export you save lands in Downloads and AURA ticks it off below automatically.</div>
+      <table id="checklist"><thead><tr><th>CONDITION</th><th>GROUP BY</th><th>DATASET</th><th>STATUS</th></tr></thead><tbody></tbody></table>
+      <div class="row" style="margin:12px 0 4px">
+        <button class="btn small" data-open="D77">OPEN CDC WONDER 1999–2020</button>
+        <button class="btn small" data-open="D157">OPEN CDC WONDER 2018–2024</button>
+        <button class="btn small" id="addFile">+ ADD AN EXPORTED FILE MANUALLY</button>
+      </div>
+      <ol class="steps" id="steps"></ol>
+    </section>
+
+    <section class="panel">
+      <h2><span class="n">C</span> EXCEL WORKBOOKS</h2>
+      <div class="hint">Built automatically when the API part finishes (and rebuilt once all website exports are in). You can also build now with whatever is ready.</div>
+      <ul class="outputs" id="outputs"></ul>
+      <div class="row"><button class="btn small" id="buildBtn">⟳ BUILD / REBUILD EXCEL NOW</button> <button class="btn small" id="newBtn">+ NEW EXTRACTION</button></div>
+    </section>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const api = () => (window.pywebview && window.pywebview.api) ? window.pywebview.api : null;
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+let setup = null, selectedAges = new Set(), pollTimer = null, gap = 120;
+
+/* ---------------- conditions A and B */
+function wire(rowId) {
+  const row = $(rowId), [n, c] = row.querySelectorAll('input'), msg = row.querySelector('.msg');
+  let t = null;
+  c.addEventListener('input', () => { row.dataset.suggested = ''; clearTimeout(t); t = setTimeout(() => validate(c, msg, false), 350); });
+  n.addEventListener('input', () => { summary(); causeLabels(); });
+}
+function fillRow(rowId, name, codes, suggested) {
+  const row = $(rowId), [n, c] = row.querySelectorAll('input'), msg = row.querySelector('.msg');
+  n.value = name || ''; c.value = codes || ''; row.dataset.suggested = suggested ? '1' : '';
+  msg.textContent = ''; if (codes) validate(c, msg, suggested);
+}
+async function validate(input, msg, keepSuggested) {
+  if (!api() || !input.value.trim()) { msg.textContent = ''; summary(); return; }
+  const r = JSON.parse(await api().check_codes(input.value));
+  if (r.errors.length) { msg.className = 'msg bad'; msg.textContent = 'Not recognised: ' + r.errors.join(', '); }
+  else if (keepSuggested) { msg.className = 'msg sug'; msg.textContent = '⚠ AI-suggested — please check: ' + r.codes.join(', '); }
+  else { msg.className = 'msg ok'; msg.textContent = '✓ ' + r.codes.length + ' code(s): ' + r.codes.join(', '); }
+  summary();
+}
+const rowVal = (id) => { const [n, c] = $(id).querySelectorAll('input'); return { name: n.value.trim(), codes: c.value.trim() }; };
+function causeLabels() {
+  const A = rowVal('condA').name || 'A', B = rowVal('condB').name;
+  $('causeMulti').textContent = B ? `Both anywhere on the certificate (${A} AND ${B})` : `${A} anywhere on the certificate`;
+  $('causeUnder').textContent = B ? `Died from ${A} (underlying), with ${B} contributing` : `${A} as the underlying cause only`;
+}
+wire('condA'); wire('condB');
+
+/* ---------------- ages */
+function renderAges() {
+  const box = $('ages'); box.innerHTML = '';
+  setup.ages.forEach(a => {
+    const d = el('div', 'age' + (selectedAges.has(a.value) ? ' on' : ''), a.label);
+    d.onclick = () => { selectedAges.has(a.value) ? selectedAges.delete(a.value) : selectedAges.add(a.value); renderAges(); summary(); };
+    box.appendChild(d);
+  });
+  $('ageNote').textContent = selectedAges.size ? `${selectedAges.size} group(s) selected — age-adjusted rates are standardised over these ages.` : 'No groups selected = all ages.';
+}
+document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => {
+  const p = b.dataset.preset; selectedAges.clear();
+  if (p !== 'all') setup.ages.forEach(a => { const m = a.value.match(/^(\d+)/); if (m && +m[1] >= +p) selectedAges.add(a.value); });
+  renderAges(); summary();
+});
+
+/* ---------------- summary + start */
+function summary() {
+  if (!setup) return;
+  const A = rowVal('condA'), B = rowVal('condB');
+  const q = setup.api_groupings.length * 2;
+  const who = A.name ? (B.name ? `${A.name} AND ${B.name} (deaths with both)` : A.name) : '';
+  $('summary').textContent = who ? `${who} · ${setup.api_groupings.length} groupings × 2 datasets = ${q} automatic queries · about ${Math.round(q * gap / 60)} minutes in the background.` : '';
+}
+$('startBtn').onclick = async () => {
+  $('err').textContent = '';
+  const spec = { a: rowVal('condA'), b: rowVal('condB'), ages: [...selectedAges], cause: document.querySelector('input[name=cause]:checked').value,
+                 accept_terms: setup.consented || $('terms').checked };
+  if (!spec.accept_terms) { $('err').textContent = 'Please tick the box to accept CDC WONDER\'s data use restrictions first.'; return; }
+  $('startBtn').disabled = true;
+  const r = JSON.parse(await api().start(JSON.stringify(spec)));
+  $('startBtn').disabled = false;
+  if (r.error) { $('err').textContent = r.error; return; }
+  showRunning(r.status);
+};
+
+/* ---------------- running view */
+function showRunning(st) { $('setup').classList.add('hidden'); $('running').classList.remove('hidden'); renderStatus(st); startPolling(); }
+function startPolling() { clearInterval(pollTimer); pollTimer = setInterval(async () => { if (api()) renderStatus(JSON.parse(await api().status())); }, 2000); }
+let stepsFor = '';
+function renderStatus(st) {
+  if (!st) return;
+  $('progText').textContent = `${st.done} / ${st.total} queries`;
+  $('progBar').style.width = (st.done / st.total * 100) + '%';
+  const stateText = { running: 'RUNNING', api_done: 'AUTOMATIC PART COMPLETE', stopped: 'STOPPED' }[st.state] || st.state.toUpperCase();
+  $('eta').textContent = st.state === 'running' ? `${stateText} · ~${st.eta_minutes} min left` : stateText;
+  $('now').textContent = st.running ? `Querying: ${st.running}` : (st.next_in ? `Next query in ${st.next_in}s (CDC's 2-minute spacing)` : '');
+  $('fails').textContent = st.failed.length ? 'Failed: ' + st.failed.join(' | ') : '';
+  const tb = $('checklist').querySelector('tbody'); tb.innerHTML = '';
+  st.checklist.forEach(c => { const tr = el('tr'); tr.append(el('td', null, c.condition), el('td', null, c.grouping), el('td', null, c.dataset),
+    el('td', c.file ? 'ok' : 'wait', c.file ? '✓ ' + c.file : 'waiting for export…')); tb.appendChild(tr); });
+  const ul = $('outputs'); ul.innerHTML = '';
+  (st.outputs || []).forEach(p => { const li = el('li'); const b = el('button', 'btn small', 'OPEN'); b.onclick = () => api().open_path(p);
+    li.append(b, document.createTextNode('  ' + p.split(/[\\/]/).pop())); ul.appendChild(li); });
+  if (!(st.outputs || []).length) ul.appendChild(el('li', 'mono', 'Not built yet.'));
+  const sig = JSON.stringify([st.codes, st.ages, st.cause]);
+  if (sig !== stepsFor) { stepsFor = sig; renderSteps(st); }
+}
+function copyBtn(text) { const b = el('button', 'copy', 'copy'); b.onclick = () => { navigator.clipboard.writeText(text); b.textContent = 'copied'; setTimeout(() => b.textContent = 'copy', 1200); }; return b; }
+function renderSteps(st) {
+  const ol = $('steps'); ol.innerHTML = '';
+  const li = (html) => { const l = el('li'); l.innerHTML = html; ol.appendChild(l); return l; };
+  li('Click <b>OPEN CDC WONDER 1999–2020</b> above, then click <b>I Agree</b>.');
+  li('Section 1 (Organize table layout): <b>Group Results By</b> → Census Region (or State, or 2013 Urbanization), <b>And By</b> → Year. Under optional measures tick <b>Age Adjusted Rate</b>, <b>95% Confidence Interval</b> and <b>Standard Error</b>.');
+  const ageText = st.ages.join(', ');
+  const a = li(`Section 3 (Demographics): <b>Ten-Year Age Groups</b> → select <code>${ageText}</code> (Ctrl+click for several).`);
+  Object.entries(st.codes).forEach(([name, codes]) => {
+    const andCodes = (st.and_codes || {})[name];
+    let l;
+    if (st.cause === 'underlying') {
+      l = li(`Section 6 (Select underlying cause of death): <b>ICD-10 Codes</b> → use <b>Search</b> to find and select each code for condition A (Ctrl+click for several): <code>${codes.join(', ')}</code>`);
+      l.appendChild(copyBtn(codes.join(', ')));
+      if (andCodes) { const l2 = li(`Section 7 (Select multiple cause of death): choose <b>MCD - ICD-10 Codes</b>, <b>Search</b> each code for condition B, select it and click <b>Move Items Over &lt;&lt;&lt;</b> into the <b>"any of these items"</b> box: <code>${andCodes.join(', ')}</code>`); l2.appendChild(copyBtn(andCodes.join(', '))); }
+    } else {
+      l = li(`Section 7 (Select multiple cause of death): choose <b>MCD - ICD-10 Codes</b>. <b>Search</b> each code for condition A, select it and click <b>Move Items Over &lt;&lt;&lt;</b> into the <b>"any of these items"</b> box: <code>${codes.join(', ')}</code>`);
+      l.appendChild(copyBtn(codes.join(', ')));
+      if (andCodes) { const l2 = li(`Still in Section 7: do the same for condition B but move them into the <b>"AND any of these items"</b> box: <code>${andCodes.join(', ')}</code>`); l2.appendChild(copyBtn(andCodes.join(', '))); }
+    }
+  });
+  li('Section 8 (Other options): tick <b>Export Results</b>, choose export format <b>TSV</b>, and tick <b>Show Zero Values</b> and <b>Show Suppressed Values</b>. Click <b>Send</b> — the file downloads and AURA picks it up.');
+  li('Press your browser\'s <b>Back</b> button, change only the Group By (Census Region → State → 2013 Urbanization) and Send again. Then repeat everything on <b>2018–2024</b>.');
+}
+document.querySelectorAll('[data-open]').forEach(b => b.onclick = () => api()?.open_website(b.dataset.open));
+$('addFile').onclick = async () => { const r = JSON.parse(await api().add_export_file()); renderStatus(r.status); };
+$('buildBtn').onclick = async () => { $('buildBtn').disabled = true; const r = JSON.parse(await api().build()); $('buildBtn').disabled = false; renderStatus(r.status); };
+$('stopBtn').onclick = () => api()?.stop();
+$('newBtn').onclick = () => { clearInterval(pollTimer); $('running').classList.add('hidden'); $('setup').classList.remove('hidden'); };
+
+/* ---------------- start */
+async function init() {
+  setup = JSON.parse(await api().get_setup()); gap = setup.gap_seconds || 120;
+  $('apiList').textContent = setup.api_groupings.join(', ');
+  $('webList').textContent = setup.web_groupings.join(', ');
+  $('termsPanel').classList.toggle('hidden', setup.consented);
+  selectedAges.clear();
+  const pre = setup.prefill, cs = (pre && pre.conditions) || [];
+  fillRow('condA', cs[0] && cs[0].name, cs[0] && cs[0].codes, cs[0] && cs[0].suggested);
+  fillRow('condB', cs[1] && cs[1].name, cs[1] && cs[1].codes, cs[1] && cs[1].suggested);
+  causeLabels();
+  if (pre && pre.ages) pre.ages.forEach(a => selectedAges.add(a));
+  if (pre && pre.cause === 'underlying') document.querySelector('input[value=underlying]').checked = true;
+  renderAges(); summary();
+  if (setup.status && ['running', 'api_done', 'stopped'].includes(setup.status.state)) showRunning(setup.status);
+}
+window.cdcRefresh = init;
+if (api()) init(); else window.addEventListener('pywebviewready', init);
+</script>
+</body>
+</html>

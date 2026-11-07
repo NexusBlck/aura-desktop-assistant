@@ -1,0 +1,105 @@
+/* CONSOLE - a text-mode operations console (think btop / mainframe ops): one monospace face, panels titled ON their
+   border like TUI windows, bracketed controls, reverse-video selection. For ops rooms, IT, labs, engineering.
+   Themes: amber · phosphor · daylight. */
+:root[data-skin="console"] {
+  --bg: #120d04; --bg2: #120d04; --panel: #120d04; --panel-solid: #1a1307; --surface2: #120d04;
+  --line: #5c4208; --line-strong: #a87410; --rule: #5c4208;
+  --cyan: #ffb000; --cyan-bright: #ffc94d; --cyan-dim: #7a5508; --cyan-faint: rgba(255, 176, 0, .1); --on-accent: #120d04;
+  --amber: #ffd27a; --red: #ff5f3a; --green: #c7e06b; --violet: #e6a95c;
+  --text: #ffb000; --text-dim: #b87f0b; --text-faint: #745209;
+  --f-head: 'IBM Plex Mono', Consolas, monospace; --f-ui: 'IBM Plex Mono', Consolas, monospace; --f-mono: 'IBM Plex Mono', Consolas, monospace;
+  --radius: 0px; color-scheme: dark;
+}
+:root[data-skin="console"][data-skin-theme="phosphor"] {
+  --bg: #04100a; --bg2: #04100a; --panel: #04100a; --panel-solid: #08180f; --surface2: #04100a;
+  --line: #135c2c; --line-strong: #23a14c; --rule: #135c2c;
+  --cyan: #3cff6e; --cyan-bright: #8bffaa; --cyan-dim: #1b7a3a; --cyan-faint: rgba(60, 255, 110, .09); --on-accent: #04100a;
+  --amber: #d8ff5c; --red: #ff6b5c; --green: #3cff6e; --violet: #6cf0c2;
+  --text: #3cff6e; --text-dim: #25b04f; --text-faint: #16692f;
+}
+:root[data-skin="console"][data-skin-theme="daylight"] {
+  --bg: #f4f4ef; --bg2: #f4f4ef; --panel: #f4f4ef; --panel-solid: #ffffff; --surface2: #f4f4ef;
+  --line: #c9c9c1; --line-strong: #5d5d57; --rule: #c9c9c1;
+  --cyan: #005fcc; --cyan-bright: #004aa0; --cyan-dim: #8fb4e3; --cyan-faint: rgba(0, 95, 204, .08); --on-accent: #fff;
+  --amber: #a86400; --red: #c4231b; --green: #2e7d32; --violet: #6a3fb0;
+  --text: #1d1d1b; --text-dim: #5f5f5a; --text-faint: #96968f; color-scheme: light;
+}
+
+:root[data-skin="console"] body { font-size: .94rem; }
+:root[data-skin="console"] .brand svg { display: none; }
+:root[data-skin="console"] .brand .name { font-weight: 600; font-size: 1rem; letter-spacing: 0; color: var(--cyan); text-transform: lowercase; }
+:root[data-skin="console"] .brand .name::before { content: 'aura@'; color: var(--text-dim); }
+:root[data-skin="console"] .brand .name::after { content: ':~$'; color: var(--text-dim); }
+:root[data-skin="console"] .pill { border: 0; font-size: .74rem; letter-spacing: 0; text-transform: lowercase; color: var(--text-dim); padding: 0; }
+:root[data-skin="console"] .pill::before { content: '['; } :root[data-skin="console"] .pill::after { content: ']'; }
+:root[data-skin="console"] .pill .dot { border-radius: 0; animation: none; }
+
+/* every label: lowercase, no tracking */
+:root[data-skin="console"] .ph .title, :root[data-skin="console"] .section-label, :root[data-skin="console"] .page-head h1, :root[data-skin="console"] .sheet h2,
+:root[data-skin="console"] .toast .tt, :root[data-skin="console"] .field label, :root[data-skin="console"] .tab, :root[data-skin="console"] .btn, :root[data-skin="console"] .seg button,
+:root[data-skin="console"] .tool, :root[data-skin="console"] .t-line .tag, :root[data-skin="console"] .core-text .l1, :root[data-skin="console"] .callout, :root[data-skin="console"] .stat {
+  font-family: var(--f-mono); letter-spacing: 0; text-transform: lowercase; font-weight: 500; }
+:root[data-skin="console"] .section-label::before { content: '## '; color: var(--text-faint); }
+:root[data-skin="console"] .page-head h1::before { content: '> '; color: var(--text-faint); }
+
+/* TUI windows: title sits in the top border */
+:root[data-skin="console"] .panel { background: transparent; border: 1px solid var(--line-strong); padding: 14px 12px 10px; margin: 10px 0 16px; overflow: visible; }
+:root[data-skin="console"] .ph { position: absolute; top: -.72em; left: 10px; right: 10px; margin: 0; }
+:root[data-skin="console"] .ph .title { background: var(--bg); padding: 0 6px; color: var(--cyan); font-size: .82rem; }
+:root[data-skin="console"] .ph .title::before { content: '┤'; width: auto; height: auto; background: none; transform: none; color: var(--line-strong); margin-right: -4px; }
+:root[data-skin="console"] .ph .title::after { content: '├'; color: var(--line-strong); margin-left: 2px; }
+:root[data-skin="console"] .ph .code { background: var(--bg); padding: 0 6px; color: var(--text-faint); font-size: .72rem; }
+:root[data-skin="console"] .panel > .ph + * { margin-top: 2px; }
+
+/* controls: [ bracketed ], reverse video when active */
+:root[data-skin="console"] .btn { border: 0; background: transparent; color: var(--cyan); font-size: .88rem; padding: 0 6px; }
+:root[data-skin="console"] .btn::before { content: '[ '; color: var(--text-faint); } :root[data-skin="console"] .btn::after { content: ' ]'; color: var(--text-faint); }
+:root[data-skin="console"] .btn:active, :root[data-skin="console"] .btn.solid { background: var(--cyan); color: var(--on-accent); }
+:root[data-skin="console"] .btn.solid::before, :root[data-skin="console"] .btn.solid::after { color: var(--on-accent); }
+:root[data-skin="console"] .chip { border: 1px dashed var(--line-strong); font-weight: 500; font-size: .85rem; }
+:root[data-skin="console"] .input, :root[data-skin="console"] .textarea { border: 1px solid var(--line-strong); background: transparent; caret-color: var(--cyan); }
+:root[data-skin="console"] .seg button { border: 0; border-bottom: 1px solid var(--line); }
+:root[data-skin="console"] .list li { border-bottom: 1px dashed var(--line); }
+:root[data-skin="console"] .check { border-radius: 0; }
+
+/* tab bar: plain text, the active one in reverse video */
+:root[data-skin="console"] .tabbar { border-top: 1px solid var(--line-strong); }
+:root[data-skin="console"] .tab { color: var(--text-dim); font-size: .74rem; }
+:root[data-skin="console"] .tab svg { display: none; }
+:root[data-skin="console"] .tab.active { background: var(--cyan); color: var(--on-accent); }
+:root[data-skin="console"] .tab.active::after { display: none; }
+
+/* status: a prompt line with a block cursor */
+:root[data-skin="console"] .reactor { border: 1px solid var(--line-strong); min-height: 0; max-width: none; }
+:root[data-skin="console"] .core-text { min-height: 0; align-items: flex-start; text-align: left; padding: 12px 14px; }
+:root[data-skin="console"] .core-text .l1 { color: var(--text-faint); font-size: .74rem; }
+:root[data-skin="console"] .core-text .l1::before { content: '$ status --'; }
+:root[data-skin="console"] .core-text .l2 { font-family: var(--f-mono); font-weight: 600; font-size: 1.9rem; letter-spacing: 0; text-transform: lowercase; color: var(--cyan); }
+:root[data-skin="console"] .core-text .l2::before { content: '> '; color: var(--text-faint); }
+:root[data-skin="console"] .core-text .l2::after { content: ''; display: inline-block; width: .55em; height: 1em; margin-left: 6px; vertical-align: -2px; background: var(--cyan); animation: blink 1s steps(1) infinite; }
+:root[data-skin="console"] .core-text .l3 { font-family: var(--f-mono); letter-spacing: 0; text-transform: lowercase; font-size: .78rem; }
+:root[data-skin="console"] .callout { background: transparent; border: 1px dashed var(--line); font-size: .74rem; }
+:root[data-skin="console"] .callout b, :root[data-skin="console"] .stat b, :root[data-skin="console"] .focus .ftime { font-family: var(--f-mono); font-weight: 600; letter-spacing: 0; color: var(--cyan); }
+:root[data-skin="console"] .bar { height: 10px; background: transparent; border: 1px solid var(--line); }
+:root[data-skin="console"] .bar i { background: repeating-linear-gradient(90deg, var(--cyan) 0 6px, transparent 6px 8px); }
+
+/* conversation: a shell session */
+:root[data-skin="console"] .t-you::before { content: '$ '; color: var(--text-faint); }
+:root[data-skin="console"] .t-you { color: var(--cyan-bright); }
+:root[data-skin="console"] .t-aura { border-left: 0; padding-left: 0; color: var(--text); }
+:root[data-skin="console"] .t-line .tag { font-size: .7rem; }
+:root[data-skin="console"] .cmd-box { border: 1px solid var(--line-strong); background: transparent; }
+:root[data-skin="console"] .cmd-box .prompt { color: var(--cyan); font-family: var(--f-mono); animation: blink 1s steps(1) infinite; }
+:root[data-skin="console"] .send { background: transparent; color: var(--cyan); border: 1px solid var(--line-strong); }
+:root[data-skin="console"] .tool { background: transparent; border: 1px solid var(--line); font-size: .78rem; }
+:root[data-skin="console"] .tool svg { color: var(--cyan); }
+:root[data-skin="console"] .nx-card, :root[data-skin="console"] .nx-panel { background: transparent; border: 1px solid var(--line-strong); }
+:root[data-skin="console"] .toast { border: 1px solid var(--cyan); }
+:root[data-skin="console"] .toast .tt::before { content: '!! '; }
+@media (min-width: 768px) {
+  :root[data-skin="console"] #app > .tabbar { border-top: 0; border-right: 1px solid var(--line-strong); }
+  :root[data-skin="console"] .tab { height: 48px; justify-content: center; }
+}
+:root[data-skin="console"] .hud-cat { filter: grayscale(1) sepia(1) saturate(3) hue-rotate(-12deg) brightness(.9); }
+:root[data-skin="console"][data-skin-theme="phosphor"] .hud-cat { filter: grayscale(1) sepia(1) saturate(4) hue-rotate(65deg) brightness(.9); }
+:root[data-skin="console"][data-skin-theme="daylight"] .hud-cat { filter: grayscale(1); }

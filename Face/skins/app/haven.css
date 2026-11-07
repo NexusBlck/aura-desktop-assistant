@@ -1,0 +1,112 @@
+/* HAVEN - calm and accessible: Atkinson Hyperlegible (designed for low-vision readers), soft rounded cards on a warm
+   ground, big touch targets, plain sentence-case language, gentle motion. For clinics, schools, care, families.
+   Themes: sand · sage · dusk. */
+:root[data-skin="haven"] {
+  --bg: #f3ece3; --bg2: #f3ece3; --panel: #fffaf4; --panel-solid: #fffaf4; --surface2: #fbf5ed;
+  --line: rgba(59, 45, 35, .12); --line-strong: rgba(59, 45, 35, .28); --rule: rgba(59, 45, 35, .1);
+  --cyan: #b85a36; --cyan-bright: #95431f; --cyan-dim: #e3b29c; --cyan-faint: rgba(184, 90, 54, .09); --on-accent: #fff;
+  --amber: #b07400; --red: #b8322b; --green: #3d7a4c; --violet: #6b5aa1;
+  --text: #3a2e26; --text-dim: #7c6c60; --text-faint: #a99a8e;
+  --f-head: 'Atkinson Hyperlegible', 'Segoe UI', system-ui, sans-serif; --f-ui: 'Atkinson Hyperlegible', 'Segoe UI', system-ui, sans-serif;
+  --f-mono: 'Atkinson Hyperlegible Mono', 'Atkinson Hyperlegible', Consolas, monospace;
+  --radius: 16px; --shadow: 0 1px 2px rgba(59, 45, 35, .06), 0 4px 14px rgba(59, 45, 35, .06); color-scheme: light;
+}
+:root[data-skin="haven"][data-skin-theme="sage"] {
+  --bg: #ecf0ea; --bg2: #ecf0ea; --panel: #fbfcfa; --panel-solid: #fbfcfa; --surface2: #f4f7f2;
+  --line: rgba(30, 45, 33, .12); --line-strong: rgba(30, 45, 33, .28); --rule: rgba(30, 45, 33, .1);
+  --cyan: #46755a; --cyan-bright: #335a43; --cyan-dim: #a9c4b2; --cyan-faint: rgba(70, 117, 90, .1); --on-accent: #fff;
+  --text: #25302a; --text-dim: #66736b; --text-faint: #9ba69f;
+  --shadow: 0 1px 2px rgba(30, 45, 33, .06), 0 4px 14px rgba(30, 45, 33, .06);
+}
+:root[data-skin="haven"][data-skin-theme="dusk"] {
+  --bg: #211d1a; --bg2: #211d1a; --panel: #2b2622; --panel-solid: #2e2925; --surface2: #262220;
+  --line: rgba(241, 231, 220, .1); --line-strong: rgba(241, 231, 220, .24); --rule: rgba(241, 231, 220, .08);
+  --cyan: #e3a468; --cyan-bright: #f0bd8a; --cyan-dim: #7c5a3b; --cyan-faint: rgba(227, 164, 104, .12); --on-accent: #211d1a;
+  --amber: #e0b04e; --red: #e8806f; --green: #8dbd8f; --violet: #b3a3dd;
+  --text: #f1e7dc; --text-dim: #b4a697; --text-faint: #7a6e63;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 18px rgba(0, 0, 0, .25); color-scheme: dark;
+}
+
+:root[data-skin="haven"] body { font-size: 1.04rem; line-height: 1.5; }
+:root[data-skin="haven"] .brand svg { display: none; }
+:root[data-skin="haven"] .brand .name { font-weight: 700; font-size: 1.2rem; letter-spacing: 0; text-transform: none; }
+:root[data-skin="haven"] .brand::before { content: ''; width: 22px; height: 22px; border-radius: 50%; background: var(--cyan); }
+:root[data-skin="haven"] .pill { font-family: var(--f-ui); font-weight: 700; font-size: .78rem; letter-spacing: 0; text-transform: none; border: 0; background: var(--cyan-faint); color: var(--cyan-bright); padding: 6px 12px; border-radius: 999px; }
+:root[data-skin="haven"] .pill .dot { animation-duration: 3s; }
+
+/* sentence case everywhere, comfortable sizes */
+:root[data-skin="haven"] .ph .title, :root[data-skin="haven"] .section-label, :root[data-skin="haven"] .page-head h1, :root[data-skin="haven"] .sheet h2,
+:root[data-skin="haven"] .toast .tt, :root[data-skin="haven"] .field label, :root[data-skin="haven"] .tab, :root[data-skin="haven"] .btn, :root[data-skin="haven"] .seg button,
+:root[data-skin="haven"] .tool, :root[data-skin="haven"] .t-line .tag, :root[data-skin="haven"] .callout, :root[data-skin="haven"] .stat, :root[data-skin="haven"] .chip, :root[data-skin="haven"] .mini {
+  font-family: var(--f-ui); letter-spacing: 0; text-transform: none; font-weight: 700; }
+:root[data-skin="haven"] .ph .title { font-size: 1.02rem; color: var(--text); }
+:root[data-skin="haven"] .ph .title::before { width: 8px; height: 8px; border-radius: 50%; transform: none; background: var(--cyan); }
+:root[data-skin="haven"] .ph .code { font-family: var(--f-ui); color: var(--text-faint); letter-spacing: 0; font-size: .78rem; }
+:root[data-skin="haven"] .section-label { font-size: 1.15rem; color: var(--text); margin: 24px 4px 10px; }
+:root[data-skin="haven"] .page-head h1 { font-size: 1.15rem; }
+
+/* soft cards */
+:root[data-skin="haven"] .panel { background: var(--panel); border: 1px solid var(--line); padding: 16px 18px; margin-bottom: 14px; }
+:root[data-skin="haven"] .screen { padding-top: 18px; }
+
+/* controls: pills, generous */
+:root[data-skin="haven"] .btn { border-radius: 999px; min-height: 48px; padding: 0 22px; border: 1.5px solid var(--line-strong); color: var(--text); font-size: .95rem; }
+:root[data-skin="haven"] .btn.solid { box-shadow: 0 2px 8px var(--cyan-faint); }
+:root[data-skin="haven"] .chip { border-radius: 999px; background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); font-size: .92rem; min-height: 42px; padding: 0 16px; }
+:root[data-skin="haven"] .input, :root[data-skin="haven"] .textarea { border-radius: 12px; border: 1.5px solid var(--line-strong); font-family: var(--f-ui); min-height: 50px; }
+:root[data-skin="haven"] .seg { gap: 4px; padding: 4px; background: var(--cyan-faint); border-radius: 999px; top: -14px; }
+:root[data-skin="haven"] .seg button { border: 0; border-radius: 999px; font-size: .86rem; color: var(--text-dim); }
+:root[data-skin="haven"] .seg button.active { background: var(--panel-solid); color: var(--text); box-shadow: var(--shadow); border: 0; }
+:root[data-skin="haven"] .check { border-radius: 50%; border-width: 2px; }
+:root[data-skin="haven"] .list li { border-bottom: 1px solid var(--rule); padding: 12px 4px; }
+:root[data-skin="haven"] .toggle[aria-checked="true"]::after { box-shadow: 0 1px 3px rgba(0, 0, 0, .2); }
+
+/* tab bar: soft, the active tab gets a filled pill behind its icon */
+:root[data-skin="haven"] .tabbar { border-top: 1px solid var(--line); }
+:root[data-skin="haven"] .tab { color: var(--text-dim); font-size: .74rem; font-weight: 700; }
+:root[data-skin="haven"] .tab svg { padding: 4px 16px; box-sizing: content-box; border-radius: 999px; }
+:root[data-skin="haven"] .tab.active { color: var(--cyan-bright); }
+:root[data-skin="haven"] .tab.active svg { background: var(--cyan-faint); }
+:root[data-skin="haven"] .tab.active::after { display: none; }
+
+/* status: a calm round indicator that breathes */
+:root[data-skin="haven"] .reactor { min-height: 0; display: flex; justify-content: center; }
+:root[data-skin="haven"] .core-text { width: 210px; height: 210px; min-height: 0; border-radius: 50%; background: var(--panel); box-shadow: var(--shadow), inset 0 0 0 10px var(--cyan-faint);
+  animation: haven-breathe 6s ease-in-out infinite; }
+:root[data-skin="haven"] .core-text .l1 { font-family: var(--f-ui); letter-spacing: 0; font-size: .82rem; color: var(--text-faint); }
+:root[data-skin="haven"] .core-text .l2 { font-family: var(--f-ui); font-weight: 700; font-size: 1.7rem; letter-spacing: 0; text-transform: lowercase; color: var(--cyan-bright); }
+:root[data-skin="haven"] .core-text .l2::first-letter { text-transform: uppercase; }
+:root[data-skin="haven"] .core-text .l3 { font-family: var(--f-ui); letter-spacing: 0; text-transform: lowercase; font-size: .85rem; padding: 0 22px; }
+:root[data-skin="haven"] body.speaking .core-text, :root[data-skin="haven"] body.listening .core-text { box-shadow: var(--shadow), inset 0 0 0 10px var(--cyan-dim); }
+@keyframes haven-breathe { 50% { transform: scale(1.025); } }
+:root[data-skin="haven"] .callout { background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); font-size: .8rem; }
+:root[data-skin="haven"] .callout b, :root[data-skin="haven"] .stat b, :root[data-skin="haven"] .focus .ftime { font-family: var(--f-ui); font-weight: 700; letter-spacing: 0; }
+:root[data-skin="haven"] .bar { height: 8px; border-radius: 999px; } :root[data-skin="haven"] .bar i { border-radius: 999px; }
+
+/* conversation: message bubbles */
+:root[data-skin="haven"] .t-line { font-size: 1.04rem; }
+:root[data-skin="haven"] .t-aura { border-left: 0; padding: 12px 16px; background: var(--panel); border-radius: 4px 18px 18px 18px; box-shadow: var(--shadow); margin-right: 12%; }
+:root[data-skin="haven"] .t-you { padding: 12px 16px; background: var(--cyan); color: var(--on-accent); border-radius: 18px 4px 18px 18px; margin-left: 18%; }
+:root[data-skin="haven"] .t-you .tag { color: var(--on-accent); opacity: .8; }
+:root[data-skin="haven"] .t-line .tag { font-size: .78rem; }
+:root[data-skin="haven"] .cmd-box { border-radius: 999px; border: 1.5px solid var(--line-strong); padding-left: 18px; box-shadow: var(--shadow); }
+:root[data-skin="haven"] .cmd-box .prompt { display: none; }
+:root[data-skin="haven"] .cmd-box textarea { font-family: var(--f-ui); }
+:root[data-skin="haven"] .send { border-radius: 50%; }
+:root[data-skin="haven"] .tool { border: 1px solid var(--line); font-size: .85rem; }
+:root[data-skin="haven"] .tool svg { color: var(--cyan); }
+:root[data-skin="haven"] .toast { border: 0; border-left: 6px solid var(--cyan); }
+:root[data-skin="haven"] .toast.reminder { border-left-color: var(--amber); } :root[data-skin="haven"] .toast.error { border-left-color: var(--red); } :root[data-skin="haven"] .toast.focus { border-left-color: var(--green); }
+@media (min-width: 768px) {
+  :root[data-skin="haven"] #app > .tabbar { border-top: 0; border-right: 1px solid var(--line); padding-top: 18px; }
+  :root[data-skin="haven"] .core-text { width: 260px; height: 260px; }
+}
+/* sentence case from the app's capitalised labels */
+:root[data-skin="haven"] .ph .title { display: block; text-transform: lowercase; padding-left: 16px; background: radial-gradient(circle at 4px 50%, var(--cyan) 4px, transparent 4.5px) no-repeat; }
+:root[data-skin="haven"] .ph .title::before { display: none; }
+:root[data-skin="haven"] .ph .title::first-letter, :root[data-skin="haven"] .section-label::first-letter, :root[data-skin="haven"] .callout::first-letter,
+:root[data-skin="haven"] .stat::first-letter, :root[data-skin="haven"] .tab span::first-letter, :root[data-skin="haven"] .field label::first-letter { text-transform: uppercase; }
+:root[data-skin="haven"] .section-label, :root[data-skin="haven"] .callout, :root[data-skin="haven"] .stat, :root[data-skin="haven"] .field label, :root[data-skin="haven"] .pill { text-transform: lowercase; }
+:root[data-skin="haven"] .callout b, :root[data-skin="haven"] .stat b { text-transform: none; }
+:root[data-skin="haven"] .tab span { display: inline-block; text-transform: lowercase; }
+:root[data-skin="haven"] .hud-cat { filter: sepia(.5) saturate(.6); }

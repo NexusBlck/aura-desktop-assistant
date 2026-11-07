@@ -1,0 +1,53 @@
+# AURA - Python dependencies. Tested with Python 3.13 (64-bit) on Windows 11.
+#   python -m pip install -r requirements.txt
+# Versions are pinned to a tested set. Pillow, pypdf and cryptography are on releases that fix the
+# vulnerabilities pip-audit reported for the versions AURA was originally developed with.
+
+# AI + web
+openai==2.45.0
+tavily-python==0.7.26
+ddgs==9.14.4
+requests==2.34.2
+gradio_client==2.7.2
+google-auth==2.56.0
+google-auth-oauthlib==1.4.0
+google-api-python-client==2.198.0
+
+# Voice
+SpeechRecognition==3.17.0
+pyaudio==0.2.14
+edge-tts==7.2.8
+pygame==2.6.1
+
+# Desktop UI + PC control (Windows)
+pywebview==6.2.1
+pythonnet==3.1.0
+pystray==0.19.5
+pyautogui==0.9.54
+pygetwindow==0.0.9
+uiautomation==2.0.29
+keyboard==0.13.5
+pyperclip==1.11.0
+pycaw==20251023
+comtypes==1.4.16
+psutil==7.2.2
+
+# Browser automation (also run: python -m playwright install msedge)
+playwright==1.63.0
+
+# Documents, images, media
+python-docx==1.2.0
+python-pptx==1.0.2
+openpyxl==3.1.5
+pypdf==6.21.4
+matplotlib==3.11.2
+qrcode==8.2
+Pillow==13.0.0
+numpy==2.5.3
+opencv-python==5.0.0.93
+imageio-ffmpeg==0.6.0
+
+# Phone app push notifications
+pywebpush==2.5.0
+py-vapid==1.9.4
+cryptography==50.0.0

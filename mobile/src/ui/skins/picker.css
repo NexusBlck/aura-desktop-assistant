@@ -1,0 +1,49 @@
+/* APPEARANCE picker (screens/tools/appearance.js) - uses whichever skin is active, previews draw in their own colours. */
+.ap { display: flex; flex-direction: column; gap: 14px; }
+.ap .help { margin: 0 0 4px; }
+.ap-card { display: grid; grid-template-columns: 150px 1fr; gap: 14px; padding: 12px; border: 1px solid var(--line); background: var(--panel-solid);
+  border-radius: var(--radius, 0px); }
+.ap-card.on { border-color: var(--cyan); box-shadow: inset 0 0 0 1px var(--cyan); }
+.ap-info { min-width: 0; }
+.ap-name { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.ap-name b { font-size: 1.15rem; color: var(--text); font-family: var(--f-ui); letter-spacing: 0; }
+.ap-name span { font-size: .8rem; color: var(--text-dim); }
+.ap-name em { font-style: normal; font-size: .7rem; color: var(--on-accent, #02121c); background: var(--cyan); padding: 2px 8px; border-radius: var(--radius, 0px); }
+.ap-info p { margin: 4px 0 10px; color: var(--text-dim); font-size: .88rem; line-height: 1.4; }
+.ap-themes { display: flex; flex-wrap: wrap; gap: 6px; }
+.ap-theme { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 12px 0 8px; border: 1px solid var(--line); background: transparent;
+  color: var(--text); font-size: .85rem; border-radius: var(--radius, 0px); font-family: var(--f-ui); letter-spacing: 0; text-transform: none; }
+.ap-theme.on { border-color: var(--cyan); background: var(--cyan-faint); font-weight: 700; }
+.ap-sw { display: inline-flex; border: 1px solid rgba(128, 128, 128, .35); }
+.ap-sw i { width: 10px; height: 20px; display: block; }
+
+/* the mini previews */
+.ap-prev { height: 150px; padding: 8px; display: flex; flex-direction: column; gap: 6px; overflow: hidden; font-size: 11px; position: relative; }
+.ap-p-head { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid; padding-bottom: 4px; }
+.ap-p-head b { font-size: 12px; letter-spacing: .04em; }
+.ap-p-head i { width: 8px; height: 8px; display: block; }
+.ap-p-status { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+.ap-p-row { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.ap-p-card { border: 1px solid; padding: 3px 5px; display: flex; flex-direction: column; }
+.ap-p-card small { font-size: 8px; opacity: .7; } .ap-p-card b { font-size: 12px; }
+.ap-p-btn { text-align: center; padding: 4px; font-weight: 700; font-size: 10px; }
+.ap-hud { letter-spacing: .12em; }
+.ap-hud .ap-p-status { font-size: 14px; letter-spacing: .2em; }
+.ap-ledger .ap-p-head { border-bottom-width: 2px; } .ap-ledger .ap-p-head b { font-style: italic; letter-spacing: 0; font-size: 14px; }
+.ap-ledger .ap-p-status { justify-content: flex-start; font-size: 26px; font-weight: 500; }
+.ap-ledger .ap-p-card { border-width: 2px 0 0; }
+.ap-hmi .ap-p-head { text-transform: uppercase; } .ap-hmi .ap-p-status { font-size: 20px; letter-spacing: .06em; justify-content: flex-start; padding-left: 8px; }
+.ap-swiss .ap-p-head { border-bottom-width: 3px; } .ap-swiss .ap-p-head b { font-weight: 900; font-size: 15px; letter-spacing: -.03em; }
+.ap-swiss .ap-p-status { justify-content: flex-start; font-size: 28px; font-weight: 900; letter-spacing: -.05em; text-transform: lowercase; }
+.ap-swiss .ap-p-card { border-width: 3px 0 0; }
+.ap-console .ap-p-status { justify-content: flex-start; font-size: 15px; font-weight: 500; }
+.ap-console .ap-p-status span::after { content: ''; display: inline-block; width: 7px; height: 13px; background: currentColor; margin-left: 3px; vertical-align: -2px; }
+.ap-console .ap-p-card { border-style: dashed; }
+.ap-haven { border-radius: 10px; } .ap-haven .ap-p-head { border: 0; }
+.ap-haven .ap-p-status { width: 70px; height: 70px; border-radius: 50%; align-self: center; flex: none; font-size: 13px; }
+.ap-haven .ap-p-card { border-radius: 8px; } .ap-haven .ap-p-btn { border-radius: 999px; }
+@media (max-width: 380px) { .ap-card { grid-template-columns: 1fr; } }
+
+.ap-icon { display: flex; gap: 14px; align-items: flex-start; padding: 12px; border: 1px solid var(--line); background: var(--panel-solid); border-radius: var(--radius, 0px); }
+.ap-icon img { width: 64px; height: 64px; border-radius: 14px; flex-shrink: 0; box-shadow: 0 1px 4px rgba(0, 0, 0, .25); }
+.ap-icon b { color: var(--text); font-family: var(--f-ui); } .ap-icon p { margin: 4px 0 0; color: var(--text-dim); font-size: .85rem; line-height: 1.4; }

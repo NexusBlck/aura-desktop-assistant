@@ -1,0 +1,79 @@
+/* The PC HUD under an alternative UI skin. The shared look comes from skins/app/*.css (the same files the phone uses -
+   the HUD and the app share class names); this file handles what only the HUD has: the background canvas, the clipped
+   top bar, the clock, the reactor zone and its callouts, the voice wave, the footer strip and the boot screen. */
+:root[data-skin] #bg, :root[data-skin] .scan, :root[data-skin] .vignette, :root[data-skin] #boot { display: none !important; }
+:root[data-skin], :root[data-skin] body { background: var(--bg); color: var(--text); }
+:root[data-skin] body { font-family: var(--f-ui); }
+:root[data-skin] ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: var(--radius); }
+
+/* top bar */
+:root[data-skin] .topbar { clip-path: none; background: var(--surface2); border: 1px solid var(--rule); border-radius: var(--radius); }
+:root[data-skin] .brand .tag { color: var(--text-faint); font-family: var(--f-mono); }
+:root[data-skin] .status-pill { background: transparent; color: var(--text); border-color: var(--line-strong); font-family: var(--f-ui); letter-spacing: .04em; border-radius: var(--radius); }
+:root[data-skin] .status-pill .dot { box-shadow: none; }
+:root[data-skin] .clockbox .time { color: var(--text); font-family: var(--f-head); }
+:root[data-skin] .clockbox .date { color: var(--text-dim); font-family: var(--f-mono); }
+
+/* panels on the HUD sit in columns - keep them filling their space */
+:root[data-skin] .panel { backdrop-filter: none; }
+:root[data-skin] .procs li { border-bottom: 1px solid var(--rule); }
+:root[data-skin] .procs li span:first-child { color: var(--text); }
+:root[data-skin] .procs li .c { color: var(--text); }
+:root[data-skin] .net-row .cap, :root[data-skin] .gauge .lbl { color: var(--text-dim); }
+
+/* the centre: status readout + four figures around it */
+:root[data-skin] .reactor { height: auto; margin: auto; }
+:root[data-skin] .callout { position: absolute; }
+:root[data-skin] .callout::after { display: none; }
+:root[data-skin] #wave { filter: grayscale(1) contrast(1.4); opacity: .7; }
+
+/* command line */
+:root[data-skin] .cmd-box { clip-path: none; }
+:root[data-skin] #cmdInput { color: var(--text); font-family: var(--f-mono); }
+:root[data-skin] #cmdInput::placeholder { color: var(--text-faint); }
+:root[data-skin] .cmd-box .hint, :root[data-skin] kbd { color: var(--text-faint); font-family: var(--f-mono); }
+:root[data-skin] kbd { border: 1px solid var(--line); background: transparent; border-radius: calc(var(--radius) / 3); }
+
+/* right column: tabs + notes */
+:root[data-skin] .tabs { border-color: var(--rule); }
+:root[data-skin] .tab .n { color: var(--text-faint); }
+:root[data-skin] .add-row input, :root[data-skin] textarea#notes { background: var(--panel-solid); border: 1px solid var(--line); color: var(--text); font-family: var(--f-ui);
+  border-radius: var(--radius); }
+:root[data-skin] .add-row input:focus, :root[data-skin] textarea#notes:focus { border-color: var(--cyan); box-shadow: 0 0 0 2px var(--cyan-faint); }
+:root[data-skin] .notes-status { color: var(--text-faint); }
+:root[data-skin] .btnrow .mini { color: var(--text); border-color: var(--line-strong); }
+
+/* footer strip */
+:root[data-skin] .strip { background: var(--surface2); border-top: 1px solid var(--rule); color: var(--text-dim); font-family: var(--f-mono); }
+:root[data-skin] .strip .ticker { color: var(--text-dim); }
+:root[data-skin] #uptime { color: var(--text) !important; }
+
+/* per-skin touches for the HUD's bigger canvas */
+:root[data-skin="ledger"] .grid { gap: 26px; }
+:root[data-skin="ledger"] .topbar { border: 0; border-bottom: 2px solid var(--text); background: transparent; }
+:root[data-skin="ledger"] .strip { border-top: 1px solid var(--text); background: transparent; }
+:root[data-skin="ledger"] .callout { border-left: 1px solid var(--rule); }
+:root[data-skin="hmi"] .topbar { border: 2px solid var(--line-strong); }
+:root[data-skin="hmi"] .reactor { width: 100%; max-width: 560px; }
+:root[data-skin="swiss"] .topbar { border: 0; border-bottom: 3px solid var(--rule); background: transparent; }
+:root[data-skin="swiss"] .clockbox .time { font-weight: 900; letter-spacing: -.03em; font-size: 30px; }
+:root[data-skin="swiss"] .grid { gap: 22px; }
+:root[data-skin="swiss"] .strip { border-top: 3px solid var(--rule); background: transparent; }
+:root[data-skin="console"] .topbar { background: transparent; border: 1px solid var(--line-strong); }
+:root[data-skin="console"] .status-pill { border: 0; text-transform: lowercase; }
+:root[data-skin="console"] .clockbox .time { font-weight: 600; }
+:root[data-skin="haven"] .topbar { border: 1px solid var(--line); box-shadow: var(--shadow); }
+:root[data-skin="haven"] .status-pill { border-radius: 999px; background: var(--cyan-faint); border: 0; color: var(--cyan-bright); }
+:root[data-skin="haven"] .reactor { display: flex; justify-content: center; }
+
+/* centre as a clean KPI block: the status on top, the four figures in a row beneath it */
+:root[data-skin] .reactor-zone { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: auto; gap: 12px; align-content: center; padding: 6px 2px; }
+:root[data-skin] .reactor-zone .reactor { grid-column: 1 / -1; width: 100%; max-width: none; margin: 0; }
+:root[data-skin] .reactor-zone .callout { position: static; inset: auto; min-width: 0; text-align: left; margin: 0; }
+:root[data-skin] .reactor-zone .callout b { font-size: 26px; }
+:root[data-skin="haven"] .reactor-zone .reactor { justify-content: center; }
+:root[data-skin="swiss"] .reactor-zone .callout b { font-size: 34px; }
+
+/* the right-column tabs are text tabs on the HUD (not the phone's big tab-bar cells) */
+:root[data-skin] .tabs .tab { height: auto; min-height: 34px; display: block; padding: 7px 8px; font-size: 12px; flex: 1; }
+:root[data-skin] .tabs .tab svg { display: none; }

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#04070a; font-family: 'Consolas','Segoe UI',monospace; }
+  .card {
+    width:100%; height:100%; background: rgba(6,14,20,0.97); border: 1px solid #3ad6ff;
+    border-radius: 12px; padding: 18px; box-shadow: 0 0 24px rgba(58,214,255,0.4);
+    display:flex; flex-direction:column; color:#d9f4ff;
+  }
+  h2 { margin:0 0 4px 0; font-size:16px; font-weight:400; letter-spacing:2px; color:#3ad6ff; text-align:center; text-shadow:0 0 10px rgba(58,214,255,0.5); }
+  .subtitle { font-size:11px; color:#4a6b78; text-align:center; margin-bottom:14px; text-transform:uppercase; letter-spacing:1px; }
+  label { font-size:10px; color:#1c6e85; text-transform:uppercase; letter-spacing:2px; margin-bottom:6px; display:block; }
+  #datetimePicker {
+    width:100%; background: rgba(8,18,20,0.9); border:1px solid #1c6e85; color:#d9f4ff;
+    font-family:'Consolas','Segoe UI',monospace; font-size:13px; padding:9px 11px; border-radius:6px; outline:none; margin-bottom:16px;
+  }
+  #datetimePicker:focus { border-color:#3ad6ff; }
+  .rating-row { display:flex; gap:5px; margin-bottom: 18px; flex-wrap: wrap; }
+  .rating-btn {
+    flex:1; min-width: 26px; background: rgba(8,18,20,0.9); border:1px solid #1c6e85; color:#d9f4ff;
+    font-family:'Consolas','Segoe UI',monospace; font-size:12px; padding:8px 0; border-radius:5px; cursor:pointer; text-align:center;
+  }
+  .rating-btn:hover { border-color:#3ad6ff; }
+  .rating-btn.selected { background: #3ad6ff; color:#04070a; font-weight:bold; border-color:#3ad6ff; box-shadow:0 0 10px rgba(58,214,255,0.5); }
+  .buttons { display:flex; gap:10px; margin-top:auto; }
+  .btn { flex:1; padding:10px; border-radius:6px; border:1px solid #1c6e85; cursor:pointer; font-family:'Consolas','Segoe UI',monospace; font-size:12px; text-transform:uppercase; letter-spacing:1px; text-align:center; }
+  .btn.submit { background:#3ad6ff; color:#04070a; font-weight:bold; border-color:#3ad6ff; }
+  .btn.cancel { background:transparent; color:#6f95a5; }
+
+  .flatpickr-calendar { background:#0a1620 !important; border:1px solid #1c6e85 !important; box-shadow:0 0 16px rgba(58,214,255,0.3) !important; }
+  .flatpickr-day { color:#d9f4ff !important; }
+  .flatpickr-day.selected { background:#3ad6ff !important; border-color:#3ad6ff !important; color:#04070a !important; }
+  .flatpickr-day:hover { background:#123040 !important; }
+  .flatpickr-months, .flatpickr-weekdays, .flatpickr-innerContainer, .flatpickr-rContainer { background:#0a1620 !important; }
+  .flatpickr-current-month, .flatpickr-weekday, span.flatpickr-weekday { color:#3ad6ff !important; }
+  .flatpickr-time input { color:#d9f4ff !important; background:#0a1620 !important; }
+  .flatpickr-am-pm { color:#3ad6ff !important; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>LOG SESSION</h2>
+  <div class="subtitle" id="sessionTypeLabel">session</div>
+
+  <label>When</label>
+  <input id="datetimePicker" type="text" placeholder="Pick date &amp; time...">
+
+  <label>How much did you enjoy it? (1-10)</label>
+  <div class="rating-row" id="ratingRow"></div>
+
+  <div class="buttons">
+    <div class="btn cancel" id="cancelBtn">Cancel</div>
+    <div class="btn submit" id="submitBtn">Log It</div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+let selectedRating = null;
+
+const ratingRow = document.getElementById('ratingRow');
+for (let i = 1; i <= 10; i++) {
+  const btn = document.createElement('div');
+  btn.className = 'rating-btn';
+  btn.textContent = i;
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedRating = i;
+  });
+  ratingRow.appendChild(btn);
+}
+
+const picker = flatpickr("#datetimePicker", {
+  enableTime: true,
+  dateFormat: "Y-m-d\\TH:i:S",
+  altInput: true,
+  altFormat: "M j, Y - h:i K",
+  time_24hr: false,
+  defaultDate: new Date(),
+});
+
+document.getElementById('submitBtn').addEventListener('click', () => {
+  const isoValue = document.getElementById('datetimePicker').value;
+  if (window.pywebview && window.pywebview.api) {
+    window.pywebview.api.submit_log(isoValue, selectedRating);
+  }
+});
+
+document.getElementById('cancelBtn').addEventListener('click', () => {
+  if (window.pywebview && window.pywebview.api) window.pywebview.api.cancel();
+});
+
+window.setSessionType = function (type) {
+  document.getElementById('sessionTypeLabel').textContent = type.toUpperCase();
+  selectedRating = null;
+  document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+  picker.setDate(new Date());
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+# ---------------------------------------------------------------- Secrets - never commit
+.env
+.env.*
+!.env.example
+config_local.py
+google_credentials.json
+google_token.json
+google_gmail_token.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ---------------------------------------------------------------- Personal data AURA creates at runtime
+# memory, chat log, email state, paired phones + push keys, sign-in session, tasks, reminders, settings...
+aura_*.json
+aura_*.json.tmp
+aura_notes.txt
+aura_dev_bypass.flag
+app_index.json
+file_index.json
+prisma_flow.html
+
+# Browser profiles (cookies, saved logins, history)
+browser_data/
+
+# ---------------------------------------------------------------- Generated at runtime
+logs/
+*.log
+search_results/
+Face/briefings/
+Face/mail/
+Face/models/
+face/briefings/
+face/mail/
+face/models/
+voice_samples/
+*.tmp
+
+# ---------------------------------------------------------------- Python / tooling
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.vscode/
+.idea/
+node_modules/
+requirements-lock.txt
+*.zip
+
+# ---------------------------------------------------------------- Operating system
+Thumbs.db
+desktop.ini
+.DS_Store
+$RECYCLE.BIN/

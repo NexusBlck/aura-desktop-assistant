@@ -1,0 +1,30 @@
+/* AURA design tokens - taken from the PC HUD (Face/aura_face.html) so both are one product. */
+:root {
+  --bg: #02050a; --bg2: #050b12; --panel: rgba(6, 16, 24, 0.86); --panel-solid: #07121b;
+  --line: rgba(58, 214, 255, 0.22); --line-strong: rgba(58, 214, 255, 0.55);
+  --cyan: #3ad6ff; --cyan-bright: #9ef3ff; --cyan-dim: #1b6a80; --cyan-faint: rgba(58, 214, 255, 0.08);
+  --amber: #ffb547; --red: #ff5a6a; --green: #4ef0a3; --violet: #a78bfa;
+  --text: #d6f6ff; --text-dim: #6f97a6; --text-faint: #47707f;
+  --glow: 0 0 14px rgba(58, 214, 255, .8), 0 0 40px rgba(58, 214, 255, .35);
+  --f-head: 'Orbitron', 'Segoe UI', system-ui, sans-serif;
+  --f-ui: 'Rajdhani', -apple-system, 'Segoe UI', system-ui, sans-serif;
+  --f-mono: 'Share Tech Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --cut: 14px;                         /* the HUD's clipped panel corner */
+  --tap: 44px;                         /* minimum touch target (Apple HIG) */
+  --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px); --safe-r: env(safe-area-inset-right, 0px);
+  --topbar-h: 52px; --tabbar-h: 58px;
+  color-scheme: dark;
+}
+
+/* Light theme - only when chosen in Settings ("Match iPhone" + iPhone in light mode, or "Light").
+   Same layout and accents, inverted surfaces. */
+:root[data-theme="light"] {
+  --bg: #eef6fa; --bg2: #e3eff5; --panel: rgba(255, 255, 255, 0.9); --panel-solid: #ffffff;
+  --line: rgba(10, 120, 160, 0.22); --line-strong: rgba(10, 120, 160, 0.5);
+  --cyan: #0a8fb8; --cyan-bright: #05607d; --cyan-dim: #7cc6dc; --cyan-faint: rgba(10, 143, 184, 0.08);
+  --amber: #b86e00; --red: #d0263a; --green: #0f9a61; --violet: #6d4fd6;
+  --text: #0b2833; --text-dim: #4b6e7b; --text-faint: #7896a1;
+  --glow: none;
+  color-scheme: light;
+}

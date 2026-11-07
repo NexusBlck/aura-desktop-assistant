@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- The cat's speech bubble: shows what the highlighted word/phrase means,
+     with web sources and a box for follow-up questions. Lives in its own
+     transparent window right next to the walking cat. -->
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+    background: transparent; font-family: 'Segoe UI', sans-serif; color: #d6f6ff;
+  }
+  .wrap { position: absolute; inset: 6px 16px; }
+  .bubble {
+    position: absolute; inset: 0;
+    background: rgba(6,14,22,0.97); border: 1.5px solid #3ad6ff; border-radius: 16px;
+    box-shadow: 0 0 18px rgba(58,214,255,0.35), inset 0 0 30px rgba(58,214,255,0.05);
+    padding: 12px 14px 12px; display: flex; flex-direction: column; gap: 8px;
+    transform-origin: var(--tail-x, 0%) var(--tail-y, 60%);
+  }
+  .bubble.pop { animation: popin .26s cubic-bezier(.3,1.5,.5,1); }
+  @keyframes popin { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  /* tail pointing at the cat */
+  .tail { position: absolute; width: 18px; height: 18px; background: rgba(6,14,22,0.97);
+    border: 1.5px solid #3ad6ff; transform: rotate(45deg); top: var(--tail-top, 60%); }
+  .tail.left { left: -9px; border-right: 0; border-top: 0; }
+  .tail.right { right: -9px; border-left: 0; border-bottom: 0; }
+
+  .top { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .badge { font: 700 9px 'Orbitron', 'Segoe UI', sans-serif; letter-spacing: 3px; color: #3ad6ff; flex: 1; }
+  .app { font: 10px 'Consolas', monospace; color: #4a7b8c; max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .close { background: none; border: 1px solid #1b6a80; color: #6f97a6; width: 22px; height: 22px; border-radius: 50%;
+    cursor: pointer; font-size: 13px; line-height: 18px; padding: 0; }
+  .close:hover { color: #fff; border-color: #3ad6ff; }
+
+  .phrase { font: 600 17px 'Segoe UI', sans-serif; color: #9ef3ff; flex-shrink: 0; max-height: 46px; overflow: hidden;
+    text-shadow: 0 0 10px rgba(58,214,255,.45); word-break: break-word; }
+  .phrase.long { font-size: 12px; font-weight: 400; font-style: italic; color: #8fbfcf; }
+
+  .status { font: 12px 'Consolas', monospace; color: #ffb547; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .status .paw { display: inline-block; animation: paw 0.9s ease-in-out infinite; }
+  @keyframes paw { 50% { transform: translateY(-3px) rotate(-12deg); } }
+  .status.hidden { display: none; }
+
+  .body { flex: 1; min-height: 0; overflow-y: auto; padding-right: 4px; }
+  .body::-webkit-scrollbar { width: 5px; } .body::-webkit-scrollbar-thumb { background: #1b6a80; border-radius: 3px; }
+  .headline { font-size: 14px; font-weight: 600; color: #ffffff; margin-bottom: 6px; line-height: 1.35; }
+  .explain { font-size: 13px; line-height: 1.5; color: #cfeaf3; }
+  .foryou { margin-top: 8px; font-size: 12.5px; line-height: 1.45; color: #d9c8ff;
+    border-left: 2px solid #a78bfa; padding: 4px 8px; background: rgba(167,139,250,0.07); border-radius: 0 6px 6px 0; }
+  .foryou b { color: #a78bfa; font-weight: 600; }
+  .sources { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+  .src { font: 10.5px 'Consolas', monospace; color: #3ad6ff; border: 1px solid #1b6a80; border-radius: 10px;
+    padding: 2px 8px; cursor: pointer; background: rgba(58,214,255,0.05); max-width: 170px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .src:hover { border-color: #3ad6ff; color: #fff; }
+  .err { color: #ff8f9a; font-size: 13px; }
+
+  #askInput {
+    width: 100%; flex-shrink: 0;
+    background: rgba(3,10,16,0.9); border: 1px solid #1c6e85; border-radius: 8px;
+    color: #d9f4ff; font: 12.5px 'Segoe UI', sans-serif; padding: 8px 10px; outline: none;
+  }
+  #askInput:focus { border-color: #3ad6ff; box-shadow: 0 0 8px rgba(58,214,255,0.3); }
+  #askInput::placeholder { color: #3a5866; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bubble" id="bubble">
+    <div class="tail left" id="tail"></div>
+    <div class="top">
+      <div class="badge">AURA · EXPLAINS</div>
+      <div class="app" id="app"></div>
+      <button class="close" id="closeBtn" title="Send the cat home (Esc)">&times;</button>
+    </div>
+    <div class="phrase" id="phrase"></div>
+    <div class="status" id="status"><span class="paw">&#128062;</span><span id="statusText">On my way…</span></div>
+    <div class="body" id="body"></div>
+    <input id="askInput" type="text" placeholder="Ask me more about this…" autocomplete="off" spellcheck="false">
+  </div>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+const api = () => (window.pywebview && window.pywebview.api) || null;
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+$('closeBtn').onclick = () => api() && api().close();
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && api()) api().close(); });
+
+$('askInput').addEventListener('keydown', async (e) => {
+  const q = $('askInput').value.trim();
+  if (e.key !== 'Enter' || !q || !api()) return;
+  $('askInput').value = '';
+  window.setStage('Thinking about that…');
+  await api().ask(q);
+});
+
+// ---- called from Python ----
+window.setTail = function (side, topPx) {
+  const t = $('tail');
+  t.className = 'tail ' + (side === 'right' ? 'right' : 'left');
+  document.documentElement.style.setProperty('--tail-top', topPx + 'px');
+  document.documentElement.style.setProperty('--tail-x', side === 'right' ? '100%' : '0%');
+  document.documentElement.style.setProperty('--tail-y', topPx + 'px');
+};
+
+window.resetBubble = function ({ phrase, app }) {
+  const p = $('phrase');
+  p.textContent = phrase.length > 140 ? '“' + phrase.slice(0, 140) + '…”' : phrase;
+  p.classList.toggle('long', phrase.length > 60);
+  $('app').textContent = app ? 'in ' + app : '';
+  $('app').title = app || '';
+  $('body').innerHTML = '';
+  $('askInput').value = '';
+  window.setStage('Hmm, let me look into this…');
+  const b = $('bubble'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+};
+
+window.setStage = function (text) {
+  $('status').classList.remove('hidden');
+  $('statusText').textContent = text;
+};
+
+window.showAnswer = function (a) {
+  $('status').classList.add('hidden');
+  const body = $('body');
+  body.innerHTML = '';
+  if (a.headline) body.appendChild(el('div', 'headline', a.headline));
+  if (a.explanation) body.appendChild(el('div', 'explain', a.explanation));
+  if (a.for_you) {
+    const f = el('div', 'foryou');
+    f.append(el('b', null, 'For you: '), document.createTextNode(a.for_you));
+    body.appendChild(f);
+  }
+  if (a.sources && a.sources.length) {
+    const s = el('div', 'sources');
+    for (const src of a.sources) {
+      const chip = el('span', 'src', '↗ ' + (src.domain || src.title || 'source'));
+      chip.title = (src.title || '') + '\n' + src.url;
+      chip.onclick = () => api() && api().open_url(src.url);
+      s.appendChild(chip);
+    }
+    body.appendChild(s);
+  }
+  body.scrollTop = 0;
+};
+
+window.showError = function (text) {
+  $('status').classList.add('hidden');
+  $('body').innerHTML = '';
+  $('body').appendChild(el('div', 'err', text));
+};
+
+window.focusAsk = () => $('askInput').focus();
+</script>
+</body>
+</html>
